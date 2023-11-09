@@ -41,10 +41,10 @@ public class Proxy
 		{
 			proxyServer = new ProxyServer();
 		}
-		proxyServer.ExceptionFunc = async delegate (Exception exception)
-		{
-			LogBase.Warn(exception.Message + ": " + exception.InnerException?.Message);
-		};
+		proxyServer.ExceptionFunc = delegate (Exception exception)
+        {
+            LogBase.Warn(exception.Message + ": " + exception.InnerException?.Message);
+        };
 		proxyServer.TcpTimeWaitSeconds = 10;
 		proxyServer.ConnectionTimeOutSeconds = 15;
 		if (FsProvider.Exists("./rootCert.pfx"))
@@ -90,14 +90,15 @@ public class Proxy
 		proxyServer.Stop();
 	}
 
-	public async Task OnCertificateValidation(object sender, CertificateValidationEventArgs e)
-	{
+	public static Task OnCertificateValidation(object sender, CertificateValidationEventArgs e)
+    {
         e.IsValid = true;
+        return Task.CompletedTask;
     }
 
-	private async Task OnRequest(object sender, SessionEventArgs e)
-	{
-		string path = e.HttpClient.Request.RequestUri.AbsolutePath;
+    private Task OnRequest(object sender, SessionEventArgs e)
+    {
+        string path = e.HttpClient.Request.RequestUri.AbsolutePath;
 		string host = e.HttpClient.Request.RequestUri.Host;
 		e.HttpClient.Response.ContentType = "application.json";
 
@@ -118,20 +119,24 @@ public class Proxy
 					break;
 			}
 		}
-	}
 
-	private async Task OnBeforeTunnelConnectRequest(object sender, TunnelConnectSessionEventArgs e)
-	{
-		string host = e.HttpClient.Request.RequestUri.Host;
+        return Task.CompletedTask;
+    }
+
+    private Task OnBeforeTunnelConnectRequest(object sender, TunnelConnectSessionEventArgs e)
+    {
+        string host = e.HttpClient.Request.RequestUri.Host;
 		if (!host.Contains("mod.io"))
 		{
 			e.DecryptSsl = false;
 		}
-	}
 
-	private static int GetFreeTCPPort()
+        return Task.CompletedTask;
+    }
+
+    private static int GetFreeTCPPort()
 	{
-		TcpListener tcpListener = new TcpListener(IPAddress.Loopback, 0);
+		TcpListener tcpListener = new(IPAddress.Loopback, 0);
 		tcpListener.Start();
 		int port = ((IPEndPoint)tcpListener.LocalEndpoint).Port;
 		tcpListener.Stop();
