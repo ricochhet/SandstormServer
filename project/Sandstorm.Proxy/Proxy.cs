@@ -68,7 +68,7 @@ public class Proxy
 	{
 		proxyServer.BeforeRequest += OnRequest;
 		proxyServer.ServerCertificateValidationCallback += OnCertificateValidation;
-		explicitProxyEndPoint = new ExplicitProxyEndPoint(IPAddress.Any, GetFreeTCPPort());
+		explicitProxyEndPoint = new ExplicitProxyEndPoint(IPAddress.Any, 8080);
 		explicitProxyEndPoint.BeforeTunnelConnectRequest += OnBeforeTunnelConnectRequest;
 		proxyServer.AddEndPoint(explicitProxyEndPoint);
 		proxyServer.Start();
@@ -89,7 +89,6 @@ public class Proxy
         e.IsValid = true;
     }
 
-
 	private async Task OnRequest(object sender, SessionEventArgs e)
 	{
 		string path = e.HttpClient.Request.RequestUri.AbsolutePath;
@@ -108,7 +107,6 @@ public class Proxy
 			{
 				default:
 					e.Ok("{\"error\":{\"code\":404,\"error_ref\":14000,\"message\":\"The resource requested could not be found.\"}}");
-					// e.Ok("{\"code\":200,\"status\":\"OK\",\"data\":{}}");
 					e.HttpClient.Response.ContentType = "application/json";
 					Console.WriteLine($"SUCCESS (mod.io): {host + path}");
 					break;
