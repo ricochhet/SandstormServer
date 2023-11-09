@@ -70,7 +70,7 @@ internal class Program
 		int gameId = int.Parse(args[0]);
 		int modId = int.Parse(args[1]);
 		string apiKey = args[2];
-		string res = await Api.Api.MakeGetRequest($"{Constants.ModIOApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={apiKey}");
+		string res = await HttpProvider.Get($"{Constants.ModIOApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={apiKey}");
 
 		if (res != string.Empty)
 		{

@@ -16,52 +16,14 @@ internal class Program
 {
 	private static Proxy.Proxy proxy;
 
-	private static async Task Main(string[] args)
+	private static void Main()
 	{
 		Console.Title = "SandstormServer";
 		ILogger logger = new NativeLogger();
 		LogBase.Add(logger);
 		LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
-		if (args.Length < 1)
-		{
-			LogBase.Error("Too few arguments.");
-		}
-
-		string input = args[0];
-		string[] inputArgs = args.Skip(1).ToArray();
-		if (input == "start")
-		{
-			Proxy();
-		}
-
-		if (input == "getmod")
-		{
-			await GetMod(inputArgs);
-		}
-	}
-
-	private static async Task GetMod(string[] args)
-	{
-		if (args.Length < 2) 
-		{ 
-			LogBase.Error("Too few arguments."); 
-		}
-
-		int gameId = int.Parse(args[0]);
-		int modId = int.Parse(args[1]);
-		string res = await Api.Api.MakeGetRequest($"{Constants.ModIOApiUrlBase}/games/254/mods/{150867}");
-
-		if (res != string.Empty)
-		{
-			FsProvider.WriteFile($"./SandstormServerData/{gameId}", $"Mod_{modId}.json", res);
-			LogBase.Info($"Writing Data:\nGameId: {gameId}\nModId: {modId}");
-		}
-	}
-
-	private static void Proxy()
-	{
-		try
+				try
 		{
 			proxy = new Proxy.Proxy();
 		}
