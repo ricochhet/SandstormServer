@@ -74,7 +74,7 @@ public class Proxy
 	{
 		proxyServer.BeforeRequest += OnRequest;
 		proxyServer.ServerCertificateValidationCallback += OnCertificateValidation;
-		explicitProxyEndPoint = new ExplicitProxyEndPoint(IPAddress.Any, 8080);
+		explicitProxyEndPoint = new ExplicitProxyEndPoint(IPAddress.Any, GetFreeTCPPort());
 		explicitProxyEndPoint.BeforeTunnelConnectRequest += OnBeforeTunnelConnectRequest;
 		proxyServer.AddEndPoint(explicitProxyEndPoint);
 		proxyServer.Start();

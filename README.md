@@ -8,6 +8,7 @@ A mod.io proxy server to intercept the auth request of mod.io and respond with o
 ### Sandstorm.Proxy.Client
 - Build: `dotnet build ./Sandstorm.Proxy.Cient` (From `project` root).
 - Usage: `SandstormProxy <path/to/model.json>` (See Sandstorm.Api.Client).
+- **READ:** Upon first run the proxy will require you install a certificate (`rootCert.pfx`). This is required to handle HTTPS traffic (YOU MUST INSTALL IT FOR EVERYTHING TO WORK CORRECTLY!). Additionally, the proxy may fail to find `rootCert.pfx` on first run, this does not affect the proxy, but the game itself may be unable to interact with it. You will have to restart the proxy for it to find the `rootCert.pfx`.
 #### Quirks
 - Whether it's exclusive to the tested game (Insurgency: Sandstorm) or not, the proxy settings of your device must be set to use `127.0.0.1`, using localhost makes the game ignore the proxy settings entirely. If in the future it is found different games behave differently, this may become an explicit CLI setting.
 - (If your internet breaks) If the proxy server crashes, you do not safely exit, your computer crashes, etc., you may have to clear your proxy settings. Typically you can simply switch your proxy to be off in Windows.
@@ -26,10 +27,12 @@ Sandstorm.Api.Client requires a valid API key to use. This can be obtained by cr
         - The `build` function will grab all mod object JSONs and combine them into a singular object that follows the schema of `/v1/me/subscribed`. The finalized `Subscription.json` can be found in `./SandstormServerData/{gameId}/Subscription.json`.
 
 ### Titanium.Web.Proxy
-
 The included version of Titanium.Web.Proxy has a few differences from the `develop` branch and NuGet.
 - Branch: `develop`
 - Added: `Models/LocalHostAddr`
 - Modified `ProxyServer.cs`
 
 I have added a parameter to `SetAsSystemProxy()` to include the option to specifically set the local domain to use when the proxy is set. When using 'localhost' the game ignores our proxy unless the proxy is set to use '127.0.0.1'. The change lets us specify if we want to use 'localhost' or '127.0.0.1'. Default: localhost
+
+### Suggestions & PRs
+Suggestions and pull requests are very appreciated, just keep in mind to follow the project architecture to keep it consistent.
