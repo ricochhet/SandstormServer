@@ -37,5 +37,14 @@ I have added a parameter to `SetAsSystemProxy()` to include the option to specif
 ### Suggestions & PRs
 Suggestions and pull requests are very appreciated, just keep in mind to follow the project architecture to keep it consistent.
 
+## TODO
+- Possibly handle additional mod.io API requests so we can at the minimum display the users subscribed mods.
+- Move `Constants.cs` into a configuration file.
+- Possibly allow users to automatically open the game process after the proxy server has started.
+    - Additionally have the proxy server close when the game closes.
+- Create a release build setup / script.
+- Create a faster solution for adding mods with Sandstorm.Api, possibly read all of the ids from a file.
+    - Additionally map the game name to the game id.
+
 ### License
 See LICENSE file.
