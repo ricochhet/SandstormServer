@@ -45,6 +45,7 @@ Suggestions and pull requests are very appreciated, just keep in mind to follow 
 - Create a release build setup / script.
 - Create a faster solution for adding mods with Sandstorm.Api, possibly read all of the ids from a file.
     - Additionally map the game name to the game id.
+- Add more control for running with admin rights.
 
 ### License
 See LICENSE file.
