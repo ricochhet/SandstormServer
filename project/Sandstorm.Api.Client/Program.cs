@@ -36,35 +36,38 @@ internal class Program
 {
 	private static async Task Main(string[] args)
 	{
-		Console.Title = "SandstormApiClient";
+		Console.Title = "SandstormApi";
 		ILogger logger = new NativeLogger();
 		LogBase.Add(logger);
 		LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
 		if (args.Length < 1)
 		{
+			LogBase.Error("Usage: SandstormApi <add/build> <args>");
 			LogBase.Error("Too few arguments.");
+			return;
 		}
 
 		string input = args[0];
 		string[] inputArgs = args.Skip(1).ToArray();
-		if (input == "getmod")
+		if (input == "add")
 		{
-			await GetMod(inputArgs);
+			await Add(inputArgs);
 		}
 
 		if (input == "build")
 		{
-			CreateAuthModel(inputArgs);
+			Build(inputArgs);
 		}
 	}
 
-	private static async Task GetMod(string[] args)
+	private static async Task Add(string[] args)
 	{
 		if (args.Length < 3)
 		{ 
-			LogBase.Error("Usage: SandstormApiClient getmod <gameId> <modId> <apiKey>");
+			LogBase.Error("Usage: SandstormApi get <gameId> <modId> <apiKey>");
 			LogBase.Error("Too few arguments.");
+			return;
 		}
 
 		int gameId = int.Parse(args[0]);
@@ -75,23 +78,24 @@ internal class Program
 		if (res != string.Empty)
 		{
 			FsProvider.WriteFile($"{Constants.SandstormDataPath}/{gameId}/Mods", $"Mod_{modId}.json", res);
-			LogBase.Info($"Writing Data:\nGameId: {gameId}\nModId: {modId}");
+			LogBase.Info($"Writing: {gameId} {modId}");
 		}
 	}
 
-	private static void CreateAuthModel(string[] args)
+	private static void Build(string[] args)
 	{
 		if (args.Length < 1)
 		{
-			LogBase.Error("Usage: SandstormApiClient build <gameId>");
+			LogBase.Error("Usage: SandstormApi build <gameId>");
 			LogBase.Error("Too few arguments.");
+			return;
 		}
 
 		int gameId = int.Parse(args[0]);
-		string modioDataPath = $"{Constants.SandstormDataPath}/{gameId}/";
-		List<string> modioData = FsProvider.GetFiles(modioDataPath + "Mods/", "*.json");
-		List<object> modioDataObjects = new List<object>();
-		foreach (string jsonFile in modioData)
+		string sandstormDataPath = $"{Constants.SandstormDataPath}/{gameId}/";
+		List<string> modioDataFiles = FsProvider.GetFiles(sandstormDataPath + "Mods/", "*.json");
+		List<object> modioDataObjects = new();
+		foreach (string jsonFile in modioDataFiles)
 		{
 			string jsonString = File.ReadAllText(jsonFile);
 			object modioDataObject = JsonSerializer.Deserialize<object>(jsonString);
@@ -112,6 +116,6 @@ internal class Program
 		};
 
 		string outputJson = JsonSerializer.Serialize(modIOAuthObject, options);
-		FsProvider.WriteFile(modioDataPath, "Subscription.json", outputJson);
+		FsProvider.WriteFile(sandstormDataPath, "Subscription.json", outputJson);
 	}
 }

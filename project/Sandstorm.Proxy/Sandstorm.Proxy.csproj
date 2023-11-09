@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ThirdParty\Titanium.Web.Proxy\Titanium.Web.Proxy.csproj" />
+        <ProjectReference Include="..\Sandstorm.Core\Sandstorm.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="BouncyCastle.Crypto">

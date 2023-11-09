@@ -16,16 +16,43 @@ internal class Program
 {
 	private static Proxy.Proxy proxy;
 
-	private static void Main()
+	private static void Main(string[] args)
 	{
-		Console.Title = "SandstormServer";
+		Console.Title = "SandstormProxy";
 		ILogger logger = new NativeLogger();
 		LogBase.Add(logger);
 		LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
-				try
+		if (args.Length < 1)
 		{
-			proxy = new Proxy.Proxy();
+			LogBase.Error("Usage: SandstormProxy <path/to/model.json>");
+			LogBase.Error("Too few arguments.");
+			return;
+		}
+
+		string input = args[0];
+        string modioAuthObject;
+        if (FsProvider.Exists(input))
+		{
+			try
+			{
+				modioAuthObject = File.ReadAllText(input);
+			} 
+			catch (IOException e)
+			{
+				LogBase.Error($"An error occurred while reading the auth object: {e.Message}");
+				modioAuthObject = string.Empty;
+			}
+		}
+		else
+		{
+			LogBase.Error($"Could not find auth object at path: {input}");
+			return;
+		}
+
+		try
+		{
+			proxy = new Proxy.Proxy(modioAuthObject);
 		}
 		catch (Exception ex)
 		{
@@ -43,7 +70,7 @@ internal class Program
 		}
 
 		proxy.StartProxy();
-		LogBase.Info("WARNING: DO NOT MANUALLY CLOSE THIS WINDOW! If you do and your internet breaks clear your proxy settings and restart your computer.\n");
+		LogBase.Warn("WARNING: DO NOT MANUALLY CLOSE THIS WINDOW! If you do and your internet breaks clear your proxy settings and restart your computer.");
 		LogBase.Info("==============================");
 		LogBase.Info("Intercepting connections... Now run Insurgency: Sandstorm!");
 		LogBase.Info("Press \"F\" to safely close the server.");

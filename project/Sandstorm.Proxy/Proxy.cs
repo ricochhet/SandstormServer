@@ -9,6 +9,8 @@ using Titanium.Web.Proxy.Network;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using Sandstorm.Proxy.Helpers;
+using Sandstorm.Core.Logger;
+using Sandstorm.Core.Providers;
 
 namespace Sandstorm.Proxy;
 
@@ -20,20 +22,16 @@ public class Proxy
 
 	private readonly bool admin;
 
-	private readonly string modioAuthModel;
+	private readonly string modioAuthObject;
 
-	public Proxy(bool admin = false)
+	public Proxy(string modioAuthObject, bool admin = false)
 	{
-		try 
+		if (modioAuthObject == null || modioAuthObject == string.Empty)
 		{
-			modioAuthModel = File.ReadAllText("./Models/subscription.json");
-		} 
-		catch (IOException e)
-		{
-			Console.WriteLine("An error occurred while reading the file: " + e.Message);
-			modioAuthModel = string.Empty;
+			throw new Exception("Auth object is null or empty.");
 		}
 
+		this.modioAuthObject = modioAuthObject;
 		this.admin = admin;
 		if (this.admin)
 		{
@@ -45,22 +43,29 @@ public class Proxy
 		}
 		proxyServer.ExceptionFunc = async delegate (Exception exception)
 		{
-			Console.WriteLine(exception.Message + ": " + exception.InnerException?.Message);
-			Console.WriteLine();
+			LogBase.Warn(exception.Message + ": " + exception.InnerException?.Message);
 		};
 		proxyServer.TcpTimeWaitSeconds = 10;
 		proxyServer.ConnectionTimeOutSeconds = 15;
-		proxyServer.CertificateManager.RootCertificate = new X509Certificate2("./rootCert.pfx");
+		if (FsProvider.Exists("./rootCert.pfx"))
+		{
+			LogBase.Info("Found rootCert.pfx");
+			proxyServer.CertificateManager.RootCertificate = new X509Certificate2("./rootCert.pfx");
+		}
+		else
+		{
+			LogBase.Warn("Could not find rootCert.pfx, generate a certificate and restart the server.");
+		}
 		proxyServer.CertificateManager.CertificateEngine = CertificateEngine.DefaultWindows;
 
 		if (this.admin)
 		{
-			Console.WriteLine("EnsureRootCertificate() as admin");
+			LogBase.Info("EnsureRootCertificate() as admin");
 			proxyServer.CertificateManager.EnsureRootCertificate(userTrustRootCertificate: true, machineTrustRootCertificate: true, trustRootCertificateAsAdmin: true);
 		}
 		else
 		{
-			Console.WriteLine("EnsureRootCertificate() as non-admin");
+			LogBase.Info("EnsureRootCertificate() as non-admin");
 			proxyServer.CertificateManager.EnsureRootCertificate();
 		}
 	}
@@ -98,9 +103,9 @@ public class Proxy
 
 		if (host.Contains("api.mod.io") && path.Contains("v1/me/subscribed"))
 		{
-			e.Ok(modioAuthModel);
+			e.Ok(modioAuthObject);
 			e.HttpClient.Response.ContentType = "application/json";
-			Console.WriteLine($"SUCCESS (mod.io): {host + path}");
+			LogBase.Info($"SUCCESS (mod.io): {host + path}");
 		}
 		else if (host.Contains("mod.io"))
 		{
@@ -109,7 +114,7 @@ public class Proxy
 				default:
 					e.Ok(ResponseHelper.NotFound());
 					e.HttpClient.Response.ContentType = "application/json";
-					Console.WriteLine($"SUCCESS (mod.io): {host + path}");
+					LogBase.Info($"SUCCESS (mod.io): {host + path}");
 					break;
 			}
 		}
