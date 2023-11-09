@@ -10,6 +10,8 @@ A mod.io proxy server to intercept the auth request of mod.io and respond with o
 
 While viewing logs found at %LOCALAPPDATA%/Insurgency/Saved/Logs, I notice that when Fiddler is active, the game initializes libcurl with `bUseHttpProxy = true`, and then sets a proxy address: `HttpProxyAddress = '127.0.0.1:8989'`. When Fiddler is NOT running, `bUseHttpProxy` gets set to `false`. 
 
+Using `mitmproxy` with the provided `redirect.py` script via `mitmproxy -s redirect.py`, and setting your proxy to `http=127.0.0.1:8080;https=127.0.0.1:8080` (assuming port 8080), results in the game properly redirecting requests to `lego.com`.
+
 ### Setup
 
 - `dotnet build ./Sandstorm` - builds the entire project.
