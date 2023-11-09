@@ -466,7 +466,7 @@ public partial class ProxyServer : IDisposable
     /// </summary>
     /// <param name="endPoint">The explicit endpoint.</param>
     /// <param name="protocolType">The proxy protocol type.</param>
-    public void SetAsSystemProxy(ExplicitProxyEndPoint endPoint, ProxyProtocolType protocolType)
+    public void SetAsSystemProxy(ExplicitProxyEndPoint endPoint, ProxyProtocolType protocolType, LocalHostAddr localHostAddr = LocalHostAddr.LocalHost)
     {
         if (SystemProxySettingsManager == null)
             throw new NotSupportedException(@"Setting system proxy settings are only supported in Windows.
@@ -497,7 +497,7 @@ public partial class ProxyServer : IDisposable
         SystemProxySettingsManager.SetProxy(
             Equals(endPoint.IpAddress, IPAddress.Any) |
             Equals(endPoint.IpAddress, IPAddress.Loopback)
-                ? "localhost"
+                ? ((localHostAddr == LocalHostAddr.IP) ? "127.0.0.1" : "localhost")
                 : endPoint.IpAddress.ToString(),
             endPoint.Port,
             protocolType);

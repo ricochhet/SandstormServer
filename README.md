@@ -4,13 +4,15 @@ Mod.io Proxy Server to allow true offline modding. Originally for Insurgency: Sa
 A mod.io proxy server to intercept the auth request of mod.io and respond with our own JSON model.
 
 ## Guide
-**Currenty the proxy server DOES NOT function correctly. In testing, the proxy server does not function standalone, and the game will ignore it, but if Fiddler is running, the game will correctly make requests to our proxy server. I don't know why this happens, nor do I know how to fix it :(**
 
-### Observations
+### Titanium.Web.Proxy
 
-While viewing logs found at %LOCALAPPDATA%/Insurgency/Saved/Logs, I notice that when Fiddler is active, the game initializes libcurl with `bUseHttpProxy = true`, and then sets a proxy address: `HttpProxyAddress = '127.0.0.1:8989'`. When Fiddler is NOT running, `bUseHttpProxy` gets set to `false`. 
+The included version of Titanium.Web.Proxy has a few differences from the `develop` branch and NuGet.
+- Branch: `develop`
+- Added: `Models/LocalHostAddr`
+- Modified `ProxyServer.cs`
 
-Using `mitmproxy` with the provided `redirect.py` script via `mitmproxy -s redirect.py`, and setting your proxy to `http=127.0.0.1:8080;https=127.0.0.1:8080` (assuming port 8080), results in the game properly redirecting requests to `lego.com`.
+I have added a parameter to `SetAsSystemProxy()` to include the option to specifically set the local domain to use when the proxy is set. When using 'localhost' the game ignores our proxy unless the proxy is set to use '127.0.0.1'. The change lets us specify if we want to use 'localhost' or '127.0.0.1'. Default: localhost
 
 ### Setup
 

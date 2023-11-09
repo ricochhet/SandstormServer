@@ -72,7 +72,7 @@ public class Proxy
 		explicitProxyEndPoint.BeforeTunnelConnectRequest += OnBeforeTunnelConnectRequest;
 		proxyServer.AddEndPoint(explicitProxyEndPoint);
 		proxyServer.Start();
-		proxyServer.SetAsSystemProxy(explicitProxyEndPoint, ProxyProtocolType.AllHttp);
+		proxyServer.SetAsSystemProxy(explicitProxyEndPoint, ProxyProtocolType.AllHttp, LocalHostAddr.IP);
 	}
 
 	public void Stop()
