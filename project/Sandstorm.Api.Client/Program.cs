@@ -37,7 +37,7 @@ internal class Program
 	private static async Task Main(string[] args)
 	{
 		Console.Title = "SandstormApi";
-		ILogger logger = new NativeLogger();
+		ILogger logger = new Logger();
 		LogBase.Add(logger);
 		LogBase.Info("Insurgency: Sandstorm Service Emulator");
 

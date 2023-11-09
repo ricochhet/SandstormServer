@@ -19,7 +19,7 @@ internal class Program
 	private static void Main(string[] args)
 	{
 		Console.Title = "SandstormProxy";
-		ILogger logger = new NativeLogger();
+		ILogger logger = new Logger();
 		LogBase.Add(logger);
 		LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
