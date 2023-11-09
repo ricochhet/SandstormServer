@@ -14,7 +14,7 @@ The included version of Titanium.Web.Proxy has a few differences from the `devel
 
 I have added a parameter to `SetAsSystemProxy()` to include the option to specifically set the local domain to use when the proxy is set. When using 'localhost' the game ignores our proxy unless the proxy is set to use '127.0.0.1'. The change lets us specify if we want to use 'localhost' or '127.0.0.1'. Default: localhost
 
-### Setup
+### Sandstorm.Proxy.Client
 
 - `dotnet build ./Sandstorm` - builds the entire project.
 - On your first run of the server it will ask you to install a certificate, this is safe to do, and allows the server to work correctly.

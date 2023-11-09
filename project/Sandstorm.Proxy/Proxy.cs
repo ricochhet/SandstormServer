@@ -8,6 +8,7 @@ using Titanium.Web.Proxy.Models;
 using Titanium.Web.Proxy.Network;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
+using Sandstorm.Proxy.Helpers;
 
 namespace Sandstorm.Proxy;
 
@@ -106,7 +107,7 @@ public class Proxy
 			switch (path)
 			{
 				default:
-					e.Ok("{\"error\":{\"code\":404,\"error_ref\":14000,\"message\":\"The resource requested could not be found.\"}}");
+					e.Ok(ResponseHelper.NotFound());
 					e.HttpClient.Response.ContentType = "application/json";
 					Console.WriteLine($"SUCCESS (mod.io): {host + path}");
 					break;
