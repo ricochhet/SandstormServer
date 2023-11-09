@@ -97,7 +97,7 @@ internal class Program
 		List<object> modioDataObjects = new();
 		foreach (string jsonFile in modioDataFiles)
 		{
-			string jsonString = File.ReadAllText(jsonFile);
+			string jsonString = FsProvider.ReadAllText(jsonFile);
 			object modioDataObject = JsonSerializer.Deserialize<object>(jsonString);
 			modioDataObjects.Add(modioDataObject);
 		}

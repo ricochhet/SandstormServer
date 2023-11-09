@@ -36,7 +36,7 @@ internal class Program
 		{
 			try
 			{
-				modioAuthObject = File.ReadAllText(input);
+				modioAuthObject = FsProvider.ReadAllText(input);
 			} 
 			catch (IOException e)
 			{

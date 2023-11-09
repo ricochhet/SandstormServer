@@ -76,6 +76,18 @@ public class FsProvider
         return fileData;
     }
 
+    public static string ReadAllText(string pathToFile)
+    {
+        string fileData = null;
+
+        if (File.Exists(pathToFile))
+        {
+            fileData = File.ReadAllText(pathToFile);
+        }
+
+        return fileData;
+    }
+
     public static void CreateDirectory(string folderPath)
     {
         if (!Directory.Exists(folderPath))
@@ -91,7 +103,6 @@ public class FsProvider
             Directory.Delete(folderPath, recursive);
         }
     }
-
 
     public static string UnkBytesToStr(byte[] bytes)
     {
