@@ -36,3 +36,6 @@ I have added a parameter to `SetAsSystemProxy()` to include the option to specif
 
 ### Suggestions & PRs
 Suggestions and pull requests are very appreciated, just keep in mind to follow the project architecture to keep it consistent.
+
+### License
+See LICENSE file.
