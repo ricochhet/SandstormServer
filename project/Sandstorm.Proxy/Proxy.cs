@@ -25,7 +25,11 @@ public class Proxy
     private readonly string modioAuthObject;
     private readonly bool admin;
 
-    public Proxy(int specifiedGameId, string modioAuthObject, bool admin = false)
+    public Proxy(
+        int specifiedGameId,
+        string modioAuthObject,
+        bool admin = false
+    )
     {
         if (modioAuthObject == null || modioAuthObject == string.Empty)
         {
@@ -137,7 +141,10 @@ public class Proxy
 
         if (host.Contains("api.mod.io"))
         {
-            if (path.Contains("/v1/me/subscribed") || path.Contains($"/v1/games/{specifiedGameId}/mods"))
+            if (
+                path.Contains("/v1/me/subscribed")
+                || path.Contains($"/v1/games/{specifiedGameId}/mods")
+            )
             {
                 ResponseHelper.Response(modioAuthObject, e);
             }
@@ -156,7 +163,9 @@ public class Proxy
             else
             {
                 ResponseHelper.Response(ResponseHelper.NotFound, e);
-                LogBase.Warn($"WARNING: Host: {host + path} found but has no handle.");
+                LogBase.Warn(
+                    $"WARNING: Host: {host + path} found but has no handle."
+                );
             }
         }
         else if (host.Contains("mod.io"))

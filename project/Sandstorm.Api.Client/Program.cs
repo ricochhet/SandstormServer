@@ -40,10 +40,13 @@ internal class Program
         }
 
         ApiSubscriptionConfigHelper.CheckFirstRun();
-        ApiSubscriptionConfigModel apiSubscriptionConfigModel = ApiSubscriptionConfigHelper.Read();
+        ApiSubscriptionConfigModel apiSubscriptionConfigModel =
+            ApiSubscriptionConfigHelper.Read();
         if (apiSubscriptionConfigModel == null)
         {
-            LogBase.Error("Could not read api subscription configuration file.");
+            LogBase.Error(
+                "Could not read api subscription configuration file."
+            );
             PauseAndWarn();
             return;
         }
@@ -121,7 +124,11 @@ internal class Program
         List<object> modioDataObjects = new();
         foreach (string jsonFile in modioDataFiles)
         {
-            if (!apiSubscriptionConfigModel.DoNotAddToSubscription.Contains(Path.GetFileNameWithoutExtension(jsonFile)))
+            if (
+                !apiSubscriptionConfigModel.DoNotAddToSubscription.Contains(
+                    Path.GetFileNameWithoutExtension(jsonFile)
+                )
+            )
             {
                 string jsonString = FsProvider.ReadAllText(jsonFile);
                 object modioDataObject = JsonSerializer.Deserialize<object>(

@@ -22,13 +22,12 @@ public static class ApiSubscriptionConfigHelper
     {
         if (!FsProvider.Exists(ConfigurationPath))
         {
-            LogBase.Info("Could not find api subscription configuration file. Creating...");
+            LogBase.Info(
+                "Could not find api subscription configuration file. Creating..."
+            );
             JsonSerializerOptions options = new() { WriteIndented = true };
             ApiSubscriptionConfigModel configurationModel =
-                new()
-                {
-                    DoNotAddToSubscription = {""}
-                };
+                new() { DoNotAddToSubscription = { "" } };
             string outputJson = JsonSerializer.Serialize(
                 configurationModel,
                 options
@@ -43,7 +42,9 @@ public static class ApiSubscriptionConfigHelper
         {
             string fileData = FsProvider.ReadAllText(ConfigurationPath);
             ApiSubscriptionConfigModel inputJson =
-                JsonSerializer.Deserialize<ApiSubscriptionConfigModel>(fileData);
+                JsonSerializer.Deserialize<ApiSubscriptionConfigModel>(
+                    fileData
+                );
 
             if (inputJson != null)
             {

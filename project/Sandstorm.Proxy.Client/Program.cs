@@ -27,7 +27,7 @@ internal class Program
         LogBase.Add(nativeLogger);
         LogBase.Add(fileStreamLogger);
         LogBase.Info("Insurgency: Sandstorm Service Emulator");
-        
+
         ConfigurationHelper.CheckFirstRun();
         ConfigurationModel configurationModel = ConfigurationHelper.Read();
         if (configurationModel == null)
@@ -65,7 +65,11 @@ internal class Program
 
         try
         {
-            proxy = new Proxy.Proxy(configurationModel.SpecifyModIOGameId, modioAuthObject, CheckAdmin());
+            proxy = new Proxy.Proxy(
+                configurationModel.SpecifyModIOGameId,
+                modioAuthObject,
+                CheckAdmin()
+            );
         }
         catch (Exception ex)
         {
@@ -106,19 +110,21 @@ internal class Program
     }
 
     private static bool CheckAdmin()
-	{
-		bool result = false;
-		try
-		{
+    {
+        bool result = false;
+        try
+        {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-			    result = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+                result = new WindowsPrincipal(
+                    WindowsIdentity.GetCurrent()
+                ).IsInRole(WindowsBuiltInRole.Administrator);
             }
-		}
-		catch (Exception e)
-		{
+        }
+        catch (Exception e)
+        {
             LogBase.Error(e.ToString());
-		}
-		return result;
-	}
+        }
+        return result;
+    }
 }
