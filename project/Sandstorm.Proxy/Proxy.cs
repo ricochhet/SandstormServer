@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Titanium.Web.Proxy;
@@ -11,7 +10,6 @@ using System.Security.Cryptography.X509Certificates;
 using Sandstorm.Proxy.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
-using Titanium.Web.Proxy.Http;
 
 namespace Sandstorm.Proxy;
 

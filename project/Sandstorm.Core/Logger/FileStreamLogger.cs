@@ -1,5 +1,4 @@
-﻿using Sandstorm.Core.Configuration;
-using Sandstorm.Core.Configuration.Enums;
+﻿using Sandstorm.Core.Configuration.Enums;
 using Sandstorm.Core.Configuration.Structs;
 using System;
 using System.IO;

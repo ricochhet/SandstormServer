@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Sandstorm.Api.Configuration.Models;
-using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
 

@@ -1,14 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
-using Sandstorm.Core.Configuration;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
-using Sandstorm.Proxy;
-using System.Threading.Tasks;
 using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
 using System.Security.Principal;
