@@ -21,8 +21,10 @@ internal class Program
     private static void Main(string[] args)
     {
         Console.Title = "SandstormProxy";
-        ILogger logger = new Logger();
-        LogBase.Add(logger);
+        ILogger nativeLogger = new NativeLogger();
+        ILogger fileStreamLogger = new FileStreamLogger();
+        LogBase.Add(nativeLogger);
+        LogBase.Add(fileStreamLogger);
         LogBase.Info("Insurgency: Sandstorm Service Emulator");
         ConfigurationHelper.CheckFirstRun();
         ConfigurationModel configurationModel = ConfigurationHelper.Read();
@@ -61,7 +63,7 @@ internal class Program
 
         try
         {
-            proxy = new Proxy.Proxy(modioAuthObject);
+            proxy = new Proxy.Proxy(configurationModel.SpecifyModIOGameId, modioAuthObject);
         }
         catch (Exception ex)
         {

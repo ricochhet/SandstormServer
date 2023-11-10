@@ -13,40 +13,36 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
+using Sandstorm.Api.Configuration.Models;
+using Sandstorm.Api.Configuration.Helpers;
 
 namespace Sandstorm;
-
-public class ModIOAuthObject
-{
-    [JsonPropertyName("data")]
-    public object[] Data { get; set; }
-
-    [JsonPropertyName("result_count")]
-    public int ResultCount { get; set; }
-
-    [JsonPropertyName("result_offset")]
-    public int ResultOffset { get; set; }
-
-    [JsonPropertyName("result_limit")]
-    public int ResultLimit { get; set; }
-
-    [JsonPropertyName("result_total")]
-    public int ResultTotal { get; set; }
-}
 
 internal class Program
 {
     private static async Task Main(string[] args)
     {
         Console.Title = "SandstormApi";
-        ILogger logger = new Logger();
-        LogBase.Add(logger);
+        ILogger nativeLogger = new NativeLogger();
+        ILogger fileStreamLogger = new FileStreamLogger();
+        LogBase.Add(nativeLogger);
+        LogBase.Add(fileStreamLogger);
         LogBase.Info("Insurgency: Sandstorm Service Emulator");
+
         ConfigurationHelper.CheckFirstRun();
         ConfigurationModel configurationModel = ConfigurationHelper.Read();
         if (configurationModel == null)
         {
             LogBase.Error("Could not read configuration file.");
+            PauseAndWarn();
+            return;
+        }
+
+        ApiSubcsriptionConfigHelper.CheckFirstRun();
+        ApiSubscriptionConfigModel apiSubscriptionConfigModel = ApiSubcsriptionConfigHelper.Read();
+        if (apiSubscriptionConfigModel == null)
+        {
+            LogBase.Error("Could not read api subscription configuration file.");
             PauseAndWarn();
             return;
         }
@@ -67,7 +63,7 @@ internal class Program
 
         if (input == "build")
         {
-            Build(inputArgs, configurationModel);
+            Build(inputArgs, configurationModel, apiSubscriptionConfigModel);
         }
     }
 
@@ -78,7 +74,7 @@ internal class Program
     {
         if (args.Length < 3)
         {
-            LogBase.Error("Usage: SandstormApi get <gameId> <modId> <apiKey>");
+            LogBase.Error("Usage: SandstormApi add <gameId> <modId> <apiKey>");
             LogBase.Error("Too few arguments.");
             return;
         }
@@ -94,7 +90,7 @@ internal class Program
         {
             FsProvider.WriteFile(
                 $"{configurationModel.SandstormDataPath}/{gameId}/Mods",
-                $"Mod_{modId}.json",
+                $"{modId}.json",
                 res
             );
             LogBase.Info($"Writing: {gameId} {modId}");
@@ -103,7 +99,8 @@ internal class Program
 
     private static void Build(
         string[] args,
-        ConfigurationModel configurationModel
+        ConfigurationModel configurationModel,
+        ApiSubscriptionConfigModel apiSubscriptionConfigModel
     )
     {
         if (args.Length < 1)
@@ -123,11 +120,14 @@ internal class Program
         List<object> modioDataObjects = new();
         foreach (string jsonFile in modioDataFiles)
         {
-            string jsonString = FsProvider.ReadAllText(jsonFile);
-            object modioDataObject = JsonSerializer.Deserialize<object>(
-                jsonString
-            );
-            modioDataObjects.Add(modioDataObject);
+            if (!apiSubscriptionConfigModel.DoNotAddToSubscription.Contains(Path.GetFileNameWithoutExtension(jsonFile)))
+            {
+                string jsonString = FsProvider.ReadAllText(jsonFile);
+                object modioDataObject = JsonSerializer.Deserialize<object>(
+                    jsonString
+                );
+                modioDataObjects.Add(modioDataObject);
+            }
         }
 
         JsonSerializerOptions options = new() { WriteIndented = true };

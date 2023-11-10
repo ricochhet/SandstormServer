@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using Sandstorm.Proxy.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
+using Titanium.Web.Proxy.Http;
 
 namespace Sandstorm.Proxy;
 
@@ -20,17 +21,18 @@ public class Proxy
 
     private ExplicitProxyEndPoint explicitProxyEndPoint;
 
+    private readonly int specifiedGameId;
+    private readonly string modioAuthObject;
     private readonly bool admin;
 
-    private readonly string modioAuthObject;
-
-    public Proxy(string modioAuthObject, bool admin = false)
+    public Proxy(int specifiedGameId, string modioAuthObject, bool admin = false)
     {
         if (modioAuthObject == null || modioAuthObject == string.Empty)
         {
             throw new Exception("Auth object is null or empty.");
         }
 
+        this.specifiedGameId = specifiedGameId;
         this.modioAuthObject = modioAuthObject;
         this.admin = admin;
         if (this.admin)
@@ -131,22 +133,38 @@ public class Proxy
     {
         string path = e.HttpClient.Request.RequestUri.AbsolutePath;
         string host = e.HttpClient.Request.RequestUri.Host;
-        e.HttpClient.Response.ContentType = "application.json";
+        e.HttpClient.Response.ContentType = "application/json";
 
-        if (host.Contains("api.mod.io") && path.Contains("v1/me/subscribed"))
+        if (host.Contains("api.mod.io"))
         {
-            e.Ok(modioAuthObject);
-            e.HttpClient.Response.ContentType = "application/json";
-            LogBase.Info($"SUCCESS (mod.io): {host + path}");
+            if (path.Contains("/v1/me/subscribed") || path.Contains($"/v1/games/{specifiedGameId}/mods"))
+            {
+                ResponseHelper.Response(modioAuthObject, e);
+            }
+            else if (path.Contains("/v1/me"))
+            {
+                ResponseHelper.Response(ResponseHelper.User, e);
+            }
+            else if (path.Contains("/v1/authenticate/terms"))
+            {
+                ResponseHelper.Response(ResponseHelper.Terms, e);
+            }
+            else if (path.Contains("/v1/external/steamauth"))
+            {
+                ResponseHelper.Response(ResponseHelper.Steam, e);
+            }
+            else
+            {
+                ResponseHelper.Response(ResponseHelper.NotFound, e);
+                LogBase.Warn($"WARNING: Host: {host + path} found but has no handle.");
+            }
         }
         else if (host.Contains("mod.io"))
         {
             switch (path)
             {
                 default:
-                    e.Ok(ResponseHelper.NotFound());
-                    e.HttpClient.Response.ContentType = "application/json";
-                    LogBase.Info($"SUCCESS (mod.io): {host + path}");
+                    ResponseHelper.Response(ResponseHelper.NotFound, e);
                     break;
             }
         }

@@ -1,15 +1,16 @@
 using System.Text.Json;
+using Sandstorm.Api.Configuration.Models;
 using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
 
-namespace Sandstorm.Core.Configuration.Helpers;
+namespace Sandstorm.Api.Configuration.Helpers;
 
-public static class ConfigurationHelper
+public static class ApiSubcsriptionConfigHelper
 {
     private static string ConfigurationFileName
     {
-        get { return "SandstormServerCfg.json"; }
+        get { return "SandstormApiSubscriptionCfg.json"; }
     }
 
     public static string ConfigurationPath
@@ -21,16 +22,12 @@ public static class ConfigurationHelper
     {
         if (!FsProvider.Exists(ConfigurationPath))
         {
-            LogBase.Info("Could not find configuration file. Creating...");
+            LogBase.Info("Could not find api subscription configuration file. Creating...");
             JsonSerializerOptions options = new() { WriteIndented = true };
-            ConfigurationModel configurationModel =
+            ApiSubscriptionConfigModel configurationModel =
                 new()
                 {
-                    SpecifyModIOGameId = 0,
-                    SubscriptionObjectPath = "./Subscription.json",
-                    SandstormDataPath = "./SandstormServerData",
-                    ModIOApiUrlBase = "https://api.mod.io",
-                    LoggerOutputStreamPath = "./SandstormServer.log",
+                    DoNotAddToSubscription = {""}
                 };
             string outputJson = JsonSerializer.Serialize(
                 configurationModel,
@@ -40,13 +37,13 @@ public static class ConfigurationHelper
         }
     }
 
-    public static ConfigurationModel Read()
+    public static ApiSubscriptionConfigModel Read()
     {
         if (FsProvider.Exists(ConfigurationPath))
         {
             string fileData = FsProvider.ReadAllText(ConfigurationPath);
-            ConfigurationModel inputJson =
-                JsonSerializer.Deserialize<ConfigurationModel>(fileData);
+            ApiSubscriptionConfigModel inputJson =
+                JsonSerializer.Deserialize<ApiSubscriptionConfigModel>(fileData);
 
             if (inputJson != null)
             {
