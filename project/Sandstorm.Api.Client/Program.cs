@@ -78,16 +78,21 @@ internal class Program
     {
         if (args.Length < 3)
         {
-            LogBase.Error("Usage: SandstormApi add <gameId> <modId> <apiKey>");
+            LogBase.Error("Usage: SandstormApi add <gameId> <modId>");
             LogBase.Error("Too few arguments.");
+            return;
+        }
+
+        if (configurationModel.ModIOApiKey == null || configurationModel.ModIOApiKey == string.Empty)
+        {
+            LogBase.Error($"SandstormApi requires a valid mod.io API key. Generate one here: https://mod.io/me/access, and place it in {ConfigurationHelper.ConfigurationPath}.");
             return;
         }
 
         int gameId = int.Parse(args[0]);
         int modId = int.Parse(args[1]);
-        string apiKey = args[2];
         string res = await HttpProvider.Get(
-            $"{configurationModel.ModIOApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={apiKey}"
+            $"{configurationModel.ModIOApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={configurationModel.ModIOApiKey}"
         );
 
         if (res != string.Empty)
