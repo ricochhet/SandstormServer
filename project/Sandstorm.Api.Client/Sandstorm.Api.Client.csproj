@@ -8,14 +8,11 @@
         <PlatformTarget>x64</PlatformTarget>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <PublishDir>.\bin\publish</PublishDir>
-        <!-- <PublishTrimmed>True</PublishTrimmed> -->
         <PublishReadyToRun>true</PublishReadyToRun>
         <TrimMode>partial</TrimMode>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <DeleteExistingFiles>true</DeleteExistingFiles>
         <DebugType>None</DebugType>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
         <DebugType>embedded</DebugType>
