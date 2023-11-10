@@ -9,18 +9,12 @@ public static class ConfigurationHelper
 {
     private static string ConfigurationFileName
     {
-        get
-        {
-            return "SandstormServerCfg.json";
-        }
+        get { return "SandstormServerCfg.json"; }
     }
 
-    public static string ConfigurationPath 
-    { 
-        get 
-        { 
-            return $"./{ConfigurationFileName}"; 
-        }
+    public static string ConfigurationPath
+    {
+        get { return $"./{ConfigurationFileName}"; }
     }
 
     public static void CheckFirstRun()
@@ -28,19 +22,20 @@ public static class ConfigurationHelper
         if (!FsProvider.Exists(ConfigurationPath))
         {
             LogBase.Info("Could not find configuration file. Creating...");
-            JsonSerializerOptions options = new()
-            {
-                WriteIndented = true
-            };
-            ConfigurationModel configurationModel = new()
-            {
-                SubscriptionObjectPath = "./Subscription.json",
-                SandstormDataPath = "./SandstormServerData",
-                ModIOApiUrlBase = "https://api.mod.io",
-                LoggerOutputStreamPath = "./SandstormServer.log",
-            };
-            string outputJson = JsonSerializer.Serialize(configurationModel, options);
-		    FsProvider.WriteFile("./", ConfigurationFileName, outputJson);
+            JsonSerializerOptions options = new() { WriteIndented = true };
+            ConfigurationModel configurationModel =
+                new()
+                {
+                    SubscriptionObjectPath = "./Subscription.json",
+                    SandstormDataPath = "./SandstormServerData",
+                    ModIOApiUrlBase = "https://api.mod.io",
+                    LoggerOutputStreamPath = "./SandstormServer.log",
+                };
+            string outputJson = JsonSerializer.Serialize(
+                configurationModel,
+                options
+            );
+            FsProvider.WriteFile("./", ConfigurationFileName, outputJson);
         }
     }
 
@@ -49,7 +44,8 @@ public static class ConfigurationHelper
         if (FsProvider.Exists(ConfigurationPath))
         {
             string fileData = FsProvider.ReadAllText(ConfigurationPath);
-            ConfigurationModel inputJson = JsonSerializer.Deserialize<ConfigurationModel>(fileData);
+            ConfigurationModel inputJson =
+                JsonSerializer.Deserialize<ConfigurationModel>(fileData);
 
             if (inputJson != null)
             {

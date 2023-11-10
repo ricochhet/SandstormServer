@@ -44,7 +44,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Debug(message);
-
         }
         catch { }
         finally
@@ -61,7 +60,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Debug(format, args);
-
         }
         catch { }
         finally
@@ -78,7 +76,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Native(message);
-
         }
         catch { }
         finally
@@ -95,7 +92,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Native(format, args);
-
         }
         catch { }
         finally
@@ -112,7 +108,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Info(message);
-
         }
         catch { }
         finally
@@ -129,7 +124,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Info(format, args);
-
         }
         catch { }
         finally
@@ -146,7 +140,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Warn(message);
-
         }
         catch { }
         finally
@@ -163,7 +156,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Warn(format, args);
-
         }
         catch { }
         finally
@@ -180,7 +172,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Error(message);
-
         }
         catch { }
         finally
@@ -197,7 +188,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Error(format, args);
-
         }
         catch { }
         finally
@@ -214,7 +204,6 @@ public class LogBase
 
             foreach (ILogger logger in Instance._io)
                 await logger.Benchmark(message);
-
         }
         catch { }
         finally
@@ -238,7 +227,9 @@ public class LogBase
             return;
 
         Stopwatch benchmarker = Instance._benchmarkers[name];
-        BenchmarkLog($"Time taken for '{name}': {benchmarker.ElapsedMilliseconds}ms");
+        BenchmarkLog(
+            $"Time taken for '{name}': {benchmarker.ElapsedMilliseconds}ms"
+        );
         benchmarker.Stop();
         _ = Instance._benchmarkers.Remove(name);
     }

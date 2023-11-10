@@ -16,7 +16,9 @@ public class FsProvider
     };
 
     public static bool IsPathSafe(string file) => UnsafeFiles.Contains(file);
-    public static bool Exists(string directory) => Directory.Exists(directory) || File.Exists(directory);
+
+    public static bool Exists(string directory) =>
+        Directory.Exists(directory) || File.Exists(directory);
 
     public static void CopyFile(string folderPath, string destinationPath)
     {
@@ -28,7 +30,11 @@ public class FsProvider
         }
     }
 
-    public static void CopyFile(string sourcePath, string fileName, string destinationPath)
+    public static void CopyFile(
+        string sourcePath,
+        string fileName,
+        string destinationPath
+    )
     {
         Directory.CreateDirectory(destinationPath);
         string srcPathToFile = Path.Combine(sourcePath, fileName);
@@ -40,7 +46,11 @@ public class FsProvider
         }
     }
 
-    public static void WriteFile(string folderPath, string fileName, string String)
+    public static void WriteFile(
+        string folderPath,
+        string fileName,
+        string String
+    )
     {
         Directory.CreateDirectory(folderPath);
         string pathToFile = Path.Combine(folderPath, fileName);
@@ -111,14 +121,28 @@ public class FsProvider
         return streamReader.ReadToEnd();
     }
 
-    public static DirectoryInfo[] GetDirectories(string folderPath, string searchPattern, SearchOption searchOption)
+    public static DirectoryInfo[] GetDirectories(
+        string folderPath,
+        string searchPattern,
+        SearchOption searchOption
+    )
     {
-        return new DirectoryInfo(folderPath).GetDirectories(searchPattern, searchOption);
+        return new DirectoryInfo(folderPath).GetDirectories(
+            searchPattern,
+            searchOption
+        );
     }
 
-    public static FileInfo[] GetFiles(string folderPath, string searchPattern, SearchOption searchOption)
+    public static FileInfo[] GetFiles(
+        string folderPath,
+        string searchPattern,
+        SearchOption searchOption
+    )
     {
-        return new DirectoryInfo(folderPath).GetFiles(searchPattern, searchOption);
+        return new DirectoryInfo(folderPath).GetFiles(
+            searchPattern,
+            searchOption
+        );
     }
 
     public static List<string> GetFiles(string folderPath, string searchPattern)
@@ -127,7 +151,13 @@ public class FsProvider
 
         if (Directory.Exists(folderPath))
         {
-            foreach (string file in Directory.EnumerateFiles(folderPath, searchPattern, SearchOption.AllDirectories))
+            foreach (
+                string file in Directory.EnumerateFiles(
+                    folderPath,
+                    searchPattern,
+                    SearchOption.AllDirectories
+                )
+            )
             {
                 files.Add(file);
             }
@@ -140,17 +170,24 @@ public class FsProvider
     {
         if (string.IsNullOrEmpty(startPath))
         {
-            throw new ArgumentException("Starting directory is a null reference or an empty string", nameof(startPath));
+            throw new ArgumentException(
+                "Starting directory is a null reference or an empty string",
+                nameof(startPath)
+            );
         }
 
         try
         {
-            foreach (string directory in Directory.EnumerateDirectories(startPath))
+            foreach (
+                string directory in Directory.EnumerateDirectories(startPath)
+            )
             {
                 DeleteEmptyDirectories(directory);
             }
 
-            IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(startPath);
+            IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(
+                startPath
+            );
             if (!entries.Any())
             {
                 try

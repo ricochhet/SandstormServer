@@ -26,7 +26,9 @@ public class Logger : ILogger, IDisposable
     }
 
     private static readonly SemaphoreSlim Semaphore = new(1);
-    private static readonly FileStream Stream = File.OpenWrite(LogConfiguration.OutputPath);
+    private static readonly FileStream Stream = File.OpenWrite(
+        LogConfiguration.OutputPath
+    );
 
     public Logger()
     {
@@ -36,27 +38,33 @@ public class Logger : ILogger, IDisposable
 
     public Task Debug(string message) => Write(LogLevel.Debug, message);
 
-    public Task Debug(string format, params object[] args) => Write(LogLevel.Debug, string.Format(format, args));
+    public Task Debug(string format, params object[] args) =>
+        Write(LogLevel.Debug, string.Format(format, args));
 
     public Task Info(string message) => Write(LogLevel.Info, message);
 
-    public Task Info(string format, params object[] args) => Write(LogLevel.Info, string.Format(format, args));
+    public Task Info(string format, params object[] args) =>
+        Write(LogLevel.Info, string.Format(format, args));
 
     public Task Warn(string message) => Write(LogLevel.Warn, message);
 
-    public Task Warn(string format, params object[] args) => Write(LogLevel.Warn, string.Format(format, args));
+    public Task Warn(string format, params object[] args) =>
+        Write(LogLevel.Warn, string.Format(format, args));
 
     public Task Native(string message) => Write(LogLevel.Info, message);
 
-    public Task Native(string format, params object[] args) => Write(LogLevel.Info, string.Format(format, args));
+    public Task Native(string format, params object[] args) =>
+        Write(LogLevel.Info, string.Format(format, args));
 
     public Task Error(string message) => Write(LogLevel.Error, message);
 
-    public Task Error(string format, params object[] args) => Write(LogLevel.Error, string.Format(format, args));
+    public Task Error(string format, params object[] args) =>
+        Write(LogLevel.Error, string.Format(format, args));
 
     public Task Benchmark(string message) => Write(LogLevel.Info, message);
 
-    public Task Benchmark(string format, params object[] args) => Write(LogLevel.Info, string.Format(format, args));
+    public Task Benchmark(string format, params object[] args) =>
+        Write(LogLevel.Info, string.Format(format, args));
 
     private static async Task Write(LogLevel level, string message)
     {
@@ -70,7 +78,11 @@ public class Logger : ILogger, IDisposable
         try
         {
             await Semaphore.WaitAsync();
-            await Stream.WriteAsync(Encoding.UTF8.GetBytes($"[{DateTime.Now.ToLongTimeString()}][{level}] {message}\n"));
+            await Stream.WriteAsync(
+                Encoding.UTF8.GetBytes(
+                    $"[{DateTime.Now.ToLongTimeString()}][{level}] {message}\n"
+                )
+            );
             await Stream.FlushAsync();
         }
         catch { }
