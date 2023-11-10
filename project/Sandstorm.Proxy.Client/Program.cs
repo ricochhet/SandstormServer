@@ -29,6 +29,7 @@ internal class Program
 		if (configurationModel == null)
 		{
 			LogBase.Error("Could not read configuration file.");
+			PauseAndWarn();
 			return;
 		}
 
@@ -48,6 +49,7 @@ internal class Program
 		else
 		{
 			LogBase.Error($"Could not find auth object at path: {configurationModel.SubscriptionObjectPath}");
+			PauseAndWarn();
 			return;
 		}
 
@@ -82,5 +84,14 @@ internal class Program
 			LogBase.Info("Exiting...");
 			proxy.Stop();
 		}
+	}
+
+	private static void PauseAndWarn()
+	{
+		LogBase.Warn("Press \"F\" to safely exit.");
+		while (Console.ReadKey(intercept: true).Key != ConsoleKey.F)
+		{
+		}
+		return;
 	}
 }

@@ -47,6 +47,7 @@ internal class Program
 		if (configurationModel == null)
 		{
 			LogBase.Error("Could not read configuration file.");
+			PauseAndWarn();
 			return;
 		}
 
@@ -126,5 +127,14 @@ internal class Program
 
 		string outputJson = JsonSerializer.Serialize(modIOAuthObject, options);
 		FsProvider.WriteFile(sandstormDataPath, "Subscription.json", outputJson);
+	}
+
+	private static void PauseAndWarn()
+	{
+		LogBase.Warn("Press \"F\" to safely exit.");
+		while (Console.ReadKey(intercept: true).Key != ConsoleKey.F)
+		{
+		}
+		return;
 	}
 }
