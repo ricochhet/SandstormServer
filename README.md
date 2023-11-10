@@ -19,6 +19,8 @@ A mod.io proxy server to intercept the auth request of mod.io and respond with o
 ### Sandstorm.Api.Cient
 Sandstorm.Api.Client requires a valid API key to use. This can be obtained by creating an account or signing into [mod.io](https://mod.io/g), going into the bottom right, and looking for the "My account" button. Click "Access" and folowing the steps to create an API access token.
 
+*Sandstorm.Api does not assist in downloading and installing mods. To download and install mods, you must do so directly through [mod.io](https://mod.io/g).
+
 - Build: `./install.ps1 -build api` or `dotnet build ./Sandstorm.Api.Cient` (From `project` root).
 - Usage: `SandstormApi <add/build> <args>`
     - Usage: `SandstormApi get <gameId> <modId> <apiKey>`

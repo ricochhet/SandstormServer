@@ -31,7 +31,6 @@ internal class Program
 			LogBase.Error("Could not read configuration file.");
 			return;
 		}
-		LogBase.Info("hello");
 
         string modioAuthObject;
         if (FsProvider.Exists(configurationModel.SubscriptionObjectPath))
