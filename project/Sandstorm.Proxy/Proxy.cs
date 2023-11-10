@@ -12,6 +12,10 @@ using Sandstorm.Proxy.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
 using Titanium.Web.Proxy.Http;
+using Sandstorm.Proxy.Configuration.Models;
+using System.Diagnostics.Metrics;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Sandstorm.Proxy;
 
@@ -25,11 +29,27 @@ public class Proxy
     private readonly string modioAuthObject;
     private readonly bool admin;
 
-    public Proxy(int specifiedGameId, string modioAuthObject, bool admin = false)
+    private readonly bool useProxyExtensions;
+    private readonly ProxyExtensionConfigModel proxyExtensionConfigModel;
+    private readonly List<string> proxyExtensionNames;
+
+    public Proxy(int specifiedGameId, string modioAuthObject, bool useProxyExtensions = false, ProxyExtensionConfigModel proxyExtensionConfigModel = null, bool admin = false)
     {
         if (modioAuthObject == null || modioAuthObject == string.Empty)
         {
             throw new Exception("Auth object is null or empty.");
+        }
+
+        LogBase.Debug($"useProxyExtensions: {useProxyExtensions}");
+        LogBase.Debug($"proxyExtensionConfigModel: {proxyExtensionConfigModel}");
+        if (useProxyExtensions == true && proxyExtensionConfigModel != null)
+        {
+            this.useProxyExtensions = useProxyExtensions;
+            this.proxyExtensionConfigModel = proxyExtensionConfigModel;
+            foreach (ProxyExtensionModel proxyExtensionModel in proxyExtensionConfigModel.ProxyExtensionModels)
+            {
+                proxyExtensionNames.Add(proxyExtensionModel.Host);
+            }
         }
 
         this.specifiedGameId = specifiedGameId;
@@ -168,6 +188,18 @@ public class Proxy
                     break;
             }
         }
+        
+        if (useProxyExtensions)
+        {
+            foreach (ProxyExtensionModel proxyExtensionModel in proxyExtensionConfigModel.ProxyExtensionModels)
+            {
+                if (host.Contains(proxyExtensionModel.Host) && path.Contains(proxyExtensionModel.Path))
+                {
+                    ResponseHelper.Response(proxyExtensionModel.Response, e);
+                    LogBase.Warn($"WARNING: Handle: {proxyExtensionModel.Host + proxyExtensionModel.Path} came from the proxy extension configuration.");
+                }
+            }
+        }
 
         return Task.CompletedTask;
     }
@@ -178,7 +210,7 @@ public class Proxy
     )
     {
         string host = e.HttpClient.Request.RequestUri.Host;
-        if (!host.Contains("mod.io"))
+        if (!host.Contains("mod.io") && !proxyExtensionNames.Any(host.Contains))
         {
             e.DecryptSsl = false;
         }

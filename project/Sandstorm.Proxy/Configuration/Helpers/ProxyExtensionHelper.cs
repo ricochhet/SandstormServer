@@ -1,16 +1,17 @@
+using System.Collections.Generic;
 using System.Text.Json;
-using Sandstorm.Api.Configuration.Models;
 using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
+using Sandstorm.Proxy.Configuration.Models;
 
-namespace Sandstorm.Api.Configuration.Helpers;
+namespace Sandstorm.Proxy.Configuration.Helpers;
 
-public static class ApiSubscriptionConfigHelper
+public static class ProxyExtensionHelper
 {
     private static string ConfigurationFileName
     {
-        get { return "SandstormApiSubscriptionCfg.json"; }
+        get { return "SandstormProxyExtensionCfg.json"; }
     }
 
     public static string ConfigurationPath
@@ -22,12 +23,14 @@ public static class ApiSubscriptionConfigHelper
     {
         if (!FsProvider.Exists(ConfigurationPath))
         {
-            LogBase.Info("Could not find api subscription configuration file. Creating...");
+            LogBase.Info("Could not find proxy extension configuration file. Creating...");
             JsonSerializerOptions options = new() { WriteIndented = true };
-            ApiSubscriptionConfigModel configurationModel =
+            ProxyExtensionModel dummy = new ProxyExtensionModel() { Host="null", Path="null", Response="null" };
+            List<ProxyExtensionModel> proxyExtensionModels = new List<ProxyExtensionModel> { dummy };
+            ProxyExtensionConfigModel configurationModel =
                 new()
                 {
-                    DoNotAddToSubscription = {""}
+                    ProxyExtensionModels = proxyExtensionModels
                 };
             string outputJson = JsonSerializer.Serialize(
                 configurationModel,
@@ -37,13 +40,13 @@ public static class ApiSubscriptionConfigHelper
         }
     }
 
-    public static ApiSubscriptionConfigModel Read()
+    public static ProxyExtensionConfigModel Read()
     {
         if (FsProvider.Exists(ConfigurationPath))
         {
             string fileData = FsProvider.ReadAllText(ConfigurationPath);
-            ApiSubscriptionConfigModel inputJson =
-                JsonSerializer.Deserialize<ApiSubscriptionConfigModel>(fileData);
+            ProxyExtensionConfigModel inputJson =
+                JsonSerializer.Deserialize<ProxyExtensionConfigModel>(fileData);
 
             if (inputJson != null)
             {

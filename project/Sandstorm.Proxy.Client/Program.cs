@@ -12,12 +12,15 @@ using System.Threading.Tasks;
 using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
 using System.Security.Principal;
+using Sandstorm.Proxy.Configuration.Models;
+using Sandstorm.Proxy.Configuration.Helpers;
 
 namespace Sandstorm;
 
 internal class Program
 {
     private static Proxy.Proxy proxy;
+    private static readonly bool useProxyExtensions = true;
 
     private static void Main(string[] args)
     {
@@ -34,6 +37,22 @@ internal class Program
             LogBase.Error("Could not read configuration file.");
             PauseAndWarn();
             return;
+        }
+
+        ProxyExtensionConfigModel proxyExtensionConfigModel = null;
+        if (useProxyExtensions) 
+        {
+            LogBase.Error("==============================");
+            LogBase.Warn("Proxy extensions may slow down the server");
+            LogBase.Error("==============================");
+            ProxyExtensionHelper.CheckFirstRun();
+            proxyExtensionConfigModel = ProxyExtensionHelper.Read();
+            if (proxyExtensionConfigModel == null)
+            {
+                LogBase.Error("Could not read proxy extension configuration file.");
+                PauseAndWarn();
+                return;
+            }
         }
 
         string modioAuthObject;
@@ -64,7 +83,7 @@ internal class Program
 
         try
         {
-            proxy = new Proxy.Proxy(configurationModel.SpecifyModIOGameId, modioAuthObject, CheckAdmin());
+            proxy = new Proxy.Proxy(configurationModel.SpecifyModIOGameId, modioAuthObject, useProxyExtensions, proxyExtensionConfigModel, CheckAdmin());
         }
         catch (Exception ex)
         {

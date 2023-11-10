@@ -39,8 +39,8 @@ internal class Program
             return;
         }
 
-        ApiSubcsriptionConfigHelper.CheckFirstRun();
-        ApiSubscriptionConfigModel apiSubscriptionConfigModel = ApiSubcsriptionConfigHelper.Read();
+        ApiSubscriptionConfigHelper.CheckFirstRun();
+        ApiSubscriptionConfigModel apiSubscriptionConfigModel = ApiSubscriptionConfigHelper.Read();
         if (apiSubscriptionConfigModel == null)
         {
             LogBase.Error("Could not read api subscription configuration file.");
