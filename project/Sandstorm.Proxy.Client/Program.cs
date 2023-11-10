@@ -9,6 +9,8 @@ using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
 using Sandstorm.Proxy;
 using System.Threading.Tasks;
+using Sandstorm.Core.Configuration.Helpers;
+using Sandstorm.Core.Configuration.Models;
 
 namespace Sandstorm;
 
@@ -22,21 +24,21 @@ internal class Program
 		ILogger logger = new Logger();
 		LogBase.Add(logger);
 		LogBase.Info("Insurgency: Sandstorm Service Emulator");
-
-		if (args.Length < 1)
+		ConfigurationHelper.CheckFirstRun();
+		ConfigurationModel configurationModel = ConfigurationHelper.Read();
+		if (configurationModel == null)
 		{
-			LogBase.Error("Usage: SandstormProxy <path/to/model.json>");
-			LogBase.Error("Too few arguments.");
+			LogBase.Error("Could not read configuration file.");
 			return;
 		}
+		LogBase.Info("hello");
 
-		string input = args[0];
         string modioAuthObject;
-        if (FsProvider.Exists(input))
+        if (FsProvider.Exists(configurationModel.SubscriptionObjectPath))
 		{
 			try
 			{
-				modioAuthObject = FsProvider.ReadAllText(input);
+				modioAuthObject = FsProvider.ReadAllText(configurationModel.SubscriptionObjectPath);
 			} 
 			catch (IOException e)
 			{
@@ -46,7 +48,7 @@ internal class Program
 		}
 		else
 		{
-			LogBase.Error($"Could not find auth object at path: {input}");
+			LogBase.Error($"Could not find auth object at path: {configurationModel.SubscriptionObjectPath}");
 			return;
 		}
 

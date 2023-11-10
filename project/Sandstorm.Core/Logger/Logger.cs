@@ -1,5 +1,6 @@
 using Sandstorm.Core.Configuration;
 using Sandstorm.Core.Configuration.Enums;
+using Sandstorm.Core.Configuration.Structs;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -25,7 +26,7 @@ public class Logger : ILogger, IDisposable
     }
 
     private static readonly SemaphoreSlim Semaphore = new(1);
-    private static readonly FileStream Stream = File.OpenWrite(Constants.LoggerOutputStreamPath);
+    private static readonly FileStream Stream = File.OpenWrite(LogConfiguration.OutputPath);
 
     public Logger()
     {

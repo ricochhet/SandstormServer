@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Sandstorm.Core.Configuration.Helpers;
+using Sandstorm.Core.Configuration.Models;
 
 namespace Sandstorm;
 
@@ -40,6 +42,13 @@ internal class Program
 		ILogger logger = new Logger();
 		LogBase.Add(logger);
 		LogBase.Info("Insurgency: Sandstorm Service Emulator");
+		ConfigurationHelper.CheckFirstRun();
+		ConfigurationModel configurationModel = ConfigurationHelper.Read();
+		if (configurationModel == null)
+		{
+			LogBase.Error("Could not read configuration file.");
+			return;
+		}
 
 		if (args.Length < 1)
 		{
@@ -52,16 +61,16 @@ internal class Program
 		string[] inputArgs = args.Skip(1).ToArray();
 		if (input == "add")
 		{
-			await Add(inputArgs);
+			await Add(inputArgs, configurationModel);
 		}
 
 		if (input == "build")
 		{
-			Build(inputArgs);
+			Build(inputArgs, configurationModel);
 		}
 	}
 
-	private static async Task Add(string[] args)
+	private static async Task Add(string[] args, ConfigurationModel configurationModel)
 	{
 		if (args.Length < 3)
 		{ 
@@ -73,16 +82,16 @@ internal class Program
 		int gameId = int.Parse(args[0]);
 		int modId = int.Parse(args[1]);
 		string apiKey = args[2];
-		string res = await HttpProvider.Get($"{Constants.ModIOApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={apiKey}");
+		string res = await HttpProvider.Get($"{configurationModel.ModIOApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={apiKey}");
 
 		if (res != string.Empty)
 		{
-			FsProvider.WriteFile($"{Constants.SandstormDataPath}/{gameId}/Mods", $"Mod_{modId}.json", res);
+			FsProvider.WriteFile($"{configurationModel.SandstormDataPath}/{gameId}/Mods", $"Mod_{modId}.json", res);
 			LogBase.Info($"Writing: {gameId} {modId}");
 		}
 	}
 
-	private static void Build(string[] args)
+	private static void Build(string[] args, ConfigurationModel configurationModel)
 	{
 		if (args.Length < 1)
 		{
@@ -92,7 +101,7 @@ internal class Program
 		}
 
 		int gameId = int.Parse(args[0]);
-		string sandstormDataPath = $"{Constants.SandstormDataPath}/{gameId}/";
+		string sandstormDataPath = $"{configurationModel.SandstormDataPath}/{gameId}/";
 		List<string> modioDataFiles = FsProvider.GetFiles(sandstormDataPath + "Mods/", "*.json");
 		List<object> modioDataObjects = new();
 		foreach (string jsonFile in modioDataFiles)

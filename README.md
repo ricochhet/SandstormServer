@@ -6,7 +6,7 @@ A mod.io proxy server to intercept the auth request of mod.io and respond with o
 ## Guide
 
 ### Sandstorm.Proxy.Client
-- Build: `dotnet build ./Sandstorm.Proxy.Cient` (From `project` root).
+- Build: `./install.ps1 -build proxy` or `dotnet build ./Sandstorm.Proxy.Cient` (From `project` root).
 - Usage: `SandstormProxy <path/to/model.json>` (See Sandstorm.Api.Client).
 - **READ:** Upon first run the proxy will require you install a certificate (`rootCert.pfx`). This is required to handle HTTPS traffic (YOU MUST INSTALL IT FOR EVERYTHING TO WORK CORRECTLY!). Additionally, the proxy may fail to find `rootCert.pfx` on first run, this does not affect the proxy, but the game itself may be unable to interact with it. You will have to restart the proxy for it to find the `rootCert.pfx`.
 #### Quirks
@@ -19,7 +19,7 @@ A mod.io proxy server to intercept the auth request of mod.io and respond with o
 ### Sandstorm.Api.Cient
 Sandstorm.Api.Client requires a valid API key to use. This can be obtained by creating an account or signing into [mod.io](https://mod.io/g), going into the bottom right, and looking for the "My account" button. Click "Access" and folowing the steps to create an API access token.
 
-- Build: `dotnet build ./Sandstorm.Api.Cient` (From `project` root).
+- Build: `./install.ps1 -build api` or `dotnet build ./Sandstorm.Api.Cient` (From `project` root).
 - Usage: `SandstormApi <add/build> <args>`
     - Usage: `SandstormApi get <gameId> <modId> <apiKey>`
         - The `get` function uses the [Get Mod](https://docs.mod.io/#get-mod) request to fetch a JSON [mod object](https://docs.mod.io/#mod-object). Upon a successful request, the mod object will be written to a local JSON file (`./SandstormServerData/{gameId}/Mods/*.json`).
@@ -39,7 +39,6 @@ Suggestions and pull requests are very appreciated, just keep in mind to follow 
 
 ## TODO
 - Possibly handle additional mod.io API requests so we can at the minimum display the users subscribed mods.
-- Move `Constants.cs` into a configuration file.
 - Possibly allow users to automatically open the game process after the proxy server has started.
     - Additionally have the proxy server close when the game closes.
 - Create a release build setup / script.
