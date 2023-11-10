@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Sandstorm.Core.Logger;
 
-namespace Sandstorm.Core.Providers;
+namespace Sandstorm.Api.Providers;
 
 public class HttpProvider
 {
