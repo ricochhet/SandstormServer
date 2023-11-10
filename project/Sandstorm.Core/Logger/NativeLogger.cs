@@ -22,7 +22,6 @@ public class NativeLogger : ILogger
     public NativeLogger()
     {
         _ = AllocConsole();
-        Console.Title = "[DEBUG] SandstormServer";
     }
 
     public Task Benchmark(string message) =>

@@ -23,8 +23,8 @@ Sandstorm.Api.Client requires a valid API key to use. This can be obtained by cr
 
 - Build: `./install.ps1 -build api` or `dotnet build ./Sandstorm.Api.Cient` (From `project` root).
 - Usage: `SandstormApi <add/build> <args>`
-    - Usage: `SandstormApi get <gameId> <modId> <apiKey>`
-        - The `get` function uses the [Get Mod](https://docs.mod.io/#get-mod) request to fetch a JSON [mod object](https://docs.mod.io/#mod-object). Upon a successful request, the mod object will be written to a local JSON file (`./SandstormServerData/{gameId}/Mods/*.json`).
+    - Usage: `SandstormApi add <gameId> <modId> <apiKey>`
+        - The `add` function uses the [Get Mod](https://docs.mod.io/#get-mod) request to fetch a JSON [mod object](https://docs.mod.io/#mod-object). Upon a successful request, the mod object will be written to a local JSON file (`./SandstormServerData/{gameId}/Mods/*.json`).
     - Usage: `SandstormApi build <gameId>`
         - The `build` function will grab all mod object JSONs and combine them into a singular object that follows the schema of `/v1/me/subscribed`. The finalized `Subscription.json` can be found in `./SandstormServerData/{gameId}/Subscription.json`.
 
