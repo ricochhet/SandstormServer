@@ -6,7 +6,7 @@ using Sandstorm.Core.Providers;
 
 namespace Sandstorm.Api.Configuration.Helpers;
 
-public static class ApiSubcsriptionConfigHelper
+public static class ApiSubscriptionConfigHelper
 {
     private static string ConfigurationFileName
     {
