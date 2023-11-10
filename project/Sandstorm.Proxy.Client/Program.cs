@@ -11,6 +11,7 @@ using Sandstorm.Proxy;
 using System.Threading.Tasks;
 using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
+using System.Security.Principal;
 
 namespace Sandstorm;
 
@@ -63,7 +64,7 @@ internal class Program
 
         try
         {
-            proxy = new Proxy.Proxy(configurationModel.SpecifyModIOGameId, modioAuthObject);
+            proxy = new Proxy.Proxy(configurationModel.SpecifyModIOGameId, modioAuthObject, CheckAdmin());
         }
         catch (Exception ex)
         {
@@ -102,4 +103,21 @@ internal class Program
         while (Console.ReadKey(intercept: true).Key != ConsoleKey.F) { }
         return;
     }
+
+    private static bool CheckAdmin()
+	{
+		bool result = false;
+		try
+		{
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+			    result = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+            }
+		}
+		catch (Exception e)
+		{
+            LogBase.Error(e.ToString());
+		}
+		return result;
+	}
 }
