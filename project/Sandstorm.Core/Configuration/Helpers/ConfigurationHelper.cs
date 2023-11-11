@@ -38,12 +38,7 @@ public static class ConfigurationHelper
                 };
 
             JsonSerializerOptions options = new() { WriteIndented = true };
-            JsonHelper.Write(
-                "./",
-                ConfigurationFileName,
-                configurationModel,
-                options
-            );
+            JsonHelper.Write("./", ConfigurationFileName, configurationModel, options);
         }
     }
 
@@ -51,9 +46,7 @@ public static class ConfigurationHelper
     {
         if (FsProvider.Exists(ConfigurationPath))
         {
-            ConfigurationModel inputJson = JsonHelper.Read<ConfigurationModel>(
-                ConfigurationPath
-            );
+            ConfigurationModel inputJson = JsonHelper.Read<ConfigurationModel>(ConfigurationPath);
             if (inputJson != null)
             {
                 return inputJson;

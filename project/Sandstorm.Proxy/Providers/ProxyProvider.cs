@@ -23,11 +23,7 @@ public class ProxyProvider
     private readonly string modioModObject;
     private readonly bool admin;
 
-    public ProxyProvider(
-        int specifiedGameId,
-        string modioModObject,
-        bool admin = false
-    )
+    public ProxyProvider(int specifiedGameId, string modioModObject, bool admin = false)
     {
         if (modioModObject == null || modioModObject == string.Empty)
         {
@@ -39,14 +35,7 @@ public class ProxyProvider
         this.admin = admin;
         if (this.admin)
         {
-            proxyServer = new ProxyServer(
-                userTrustRootCertificate: true,
-                machineTrustRootCertificate: true,
-                trustRootCertificateAsAdmin: true
-            )
-            {
-                ForwardToUpstreamGateway = true
-            };
+            proxyServer = new ProxyServer(userTrustRootCertificate: true, machineTrustRootCertificate: true, trustRootCertificateAsAdmin: true) { ForwardToUpstreamGateway = true };
         }
         else
         {
@@ -54,35 +43,25 @@ public class ProxyProvider
         }
         proxyServer.ExceptionFunc = delegate(Exception exception)
         {
-            LogBase.Warn(
-                exception.Message + ": " + exception.InnerException?.Message
-            );
+            LogBase.Warn(exception.Message + ": " + exception.InnerException?.Message);
         };
         proxyServer.TcpTimeWaitSeconds = 10;
         proxyServer.ConnectionTimeOutSeconds = 15;
         if (FsProvider.Exists("./rootCert.pfx"))
         {
             LogBase.Info("Found rootCert.pfx");
-            proxyServer.CertificateManager.RootCertificate =
-                new X509Certificate2("./rootCert.pfx");
+            proxyServer.CertificateManager.RootCertificate = new X509Certificate2("./rootCert.pfx");
         }
         else
         {
-            LogBase.Warn(
-                "Could not find rootCert.pfx, generate a certificate and restart the server."
-            );
+            LogBase.Warn("Could not find rootCert.pfx, generate a certificate and restart the server.");
         }
-        proxyServer.CertificateManager.CertificateEngine =
-            CertificateEngine.DefaultWindows;
+        proxyServer.CertificateManager.CertificateEngine = CertificateEngine.DefaultWindows;
 
         if (this.admin)
         {
             LogBase.Info("EnsureRootCertificate() as admin");
-            proxyServer.CertificateManager.EnsureRootCertificate(
-                userTrustRootCertificate: true,
-                machineTrustRootCertificate: true,
-                trustRootCertificateAsAdmin: true
-            );
+            proxyServer.CertificateManager.EnsureRootCertificate(userTrustRootCertificate: true, machineTrustRootCertificate: true, trustRootCertificateAsAdmin: true);
         }
         else
         {
@@ -94,38 +73,24 @@ public class ProxyProvider
     public void StartProxy()
     {
         proxyServer.BeforeRequest += OnRequest;
-        proxyServer.ServerCertificateValidationCallback +=
-            OnCertificateValidation;
-        explicitProxyEndPoint = new ExplicitProxyEndPoint(
-            IPAddress.Any,
-            GetFreeTCPPort()
-        );
-        explicitProxyEndPoint.BeforeTunnelConnectRequest +=
-            OnBeforeTunnelConnectRequest;
+        proxyServer.ServerCertificateValidationCallback += OnCertificateValidation;
+        explicitProxyEndPoint = new ExplicitProxyEndPoint(IPAddress.Any, GetFreeTCPPort());
+        explicitProxyEndPoint.BeforeTunnelConnectRequest += OnBeforeTunnelConnectRequest;
         proxyServer.AddEndPoint(explicitProxyEndPoint);
         proxyServer.Start();
-        proxyServer.SetAsSystemProxy(
-            explicitProxyEndPoint,
-            ProxyProtocolType.AllHttp,
-            LocalHostAddr.IP
-        );
+        proxyServer.SetAsSystemProxy(explicitProxyEndPoint, ProxyProtocolType.AllHttp, LocalHostAddr.IP);
     }
 
     public void Stop()
     {
         proxyServer.RestoreOriginalProxySettings();
-        explicitProxyEndPoint.BeforeTunnelConnectRequest -=
-            OnBeforeTunnelConnectRequest;
+        explicitProxyEndPoint.BeforeTunnelConnectRequest -= OnBeforeTunnelConnectRequest;
         proxyServer.BeforeRequest -= OnRequest;
-        proxyServer.ServerCertificateValidationCallback -=
-            OnCertificateValidation;
+        proxyServer.ServerCertificateValidationCallback -= OnCertificateValidation;
         proxyServer.Stop();
     }
 
-    public static Task OnCertificateValidation(
-        object sender,
-        CertificateValidationEventArgs e
-    )
+    public static Task OnCertificateValidation(object sender, CertificateValidationEventArgs e)
     {
         e.IsValid = true;
         return Task.CompletedTask;
@@ -139,10 +104,7 @@ public class ProxyProvider
 
         if (host.Contains("api.mod.io"))
         {
-            if (
-                path.Contains("/v1/me/subscribed")
-                || path.Contains($"/v1/games/{specifiedGameId}/mods")
-            )
+            if (path.Contains("/v1/me/subscribed") || path.Contains($"/v1/games/{specifiedGameId}/mods"))
             {
                 ResponseHelper.Response(modioModObject, e);
             }
@@ -161,9 +123,7 @@ public class ProxyProvider
             else
             {
                 ResponseHelper.Response(ResponseHelper.NotFound, e);
-                LogBase.Warn(
-                    $"WARNING: Host: {host + path} found but has no handle."
-                );
+                LogBase.Warn($"WARNING: Host: {host + path} found but has no handle.");
             }
         }
         else if (host.Contains("mod.io"))
@@ -179,10 +139,7 @@ public class ProxyProvider
         return Task.CompletedTask;
     }
 
-    private Task OnBeforeTunnelConnectRequest(
-        object sender,
-        TunnelConnectSessionEventArgs e
-    )
+    private Task OnBeforeTunnelConnectRequest(object sender, TunnelConnectSessionEventArgs e)
     {
         string host = e.HttpClient.Request.RequestUri.Host;
         if (!host.Contains("mod.io"))

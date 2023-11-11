@@ -9,17 +9,12 @@ public static class ResponseHelper
     {
         e.Ok(response);
         e.HttpClient.Response.ContentType = "application/json";
-        LogBase.Info(
-            $"SUCCESS (mod.io): URL: {e.HttpClient.Request.RequestUri.Host + e.HttpClient.Request.RequestUri.AbsolutePath} | Content-Length: {response.Length}"
-        );
+        LogBase.Info($"SUCCESS (mod.io): URL: {e.HttpClient.Request.RequestUri.Host + e.HttpClient.Request.RequestUri.AbsolutePath} | Content-Length: {response.Length}");
     }
 
     public static string NotFound
     {
-        get
-        {
-            return "{\"error\":{\"code\":404,\"error_ref\":14000,\"message\":\"The resource requested could not be found.\"}}";
-        }
+        get { return "{\"error\":{\"code\":404,\"error_ref\":14000,\"message\":\"The resource requested could not be found.\"}}"; }
     }
 
     public static string User
@@ -32,10 +27,7 @@ public static class ResponseHelper
 
     public static string Steam
     {
-        get
-        {
-            return "{\"code\":200,\"access_token\":\"0000000\",\"date_expires\":1999999999}";
-        }
+        get { return "{\"code\":200,\"access_token\":\"0000000\",\"date_expires\":1999999999}"; }
     }
 
     public static string Terms

@@ -227,9 +227,7 @@ public class LogBase
             return;
 
         Stopwatch benchmarker = Instance._benchmarkers[name];
-        BenchmarkLog(
-            $"Time taken for '{name}': {benchmarker.ElapsedMilliseconds}ms"
-        );
+        BenchmarkLog($"Time taken for '{name}': {benchmarker.ElapsedMilliseconds}ms");
         benchmarker.Stop();
         _ = Instance._benchmarkers.Remove(name);
     }

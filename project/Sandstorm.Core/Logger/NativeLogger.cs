@@ -24,37 +24,29 @@ public class NativeLogger : ILogger
         _ = AllocConsole();
     }
 
-    public Task Benchmark(string message) =>
-        WriteToStdout(LogLevel.Benchmark, message);
+    public Task Benchmark(string message) => WriteToStdout(LogLevel.Benchmark, message);
 
-    public Task Benchmark(string format, params object[] args) =>
-        WriteToStdout(LogLevel.Benchmark, string.Format(format, args));
+    public Task Benchmark(string format, params object[] args) => WriteToStdout(LogLevel.Benchmark, string.Format(format, args));
 
     public Task Debug(string message) => WriteToStdout(LogLevel.Debug, message);
 
-    public Task Debug(string format, params object[] args) =>
-        WriteToStdout(LogLevel.Debug, string.Format(format, args));
+    public Task Debug(string format, params object[] args) => WriteToStdout(LogLevel.Debug, string.Format(format, args));
 
     public Task Info(string message) => WriteToStdout(LogLevel.Info, message);
 
-    public Task Info(string format, params object[] args) =>
-        WriteToStdout(LogLevel.Info, string.Format(format, args));
+    public Task Info(string format, params object[] args) => WriteToStdout(LogLevel.Info, string.Format(format, args));
 
     public Task Warn(string message) => WriteToStdout(LogLevel.Warn, message);
 
-    public Task Warn(string format, params object[] args) =>
-        WriteToStdout(LogLevel.Warn, string.Format(format, args));
+    public Task Warn(string format, params object[] args) => WriteToStdout(LogLevel.Warn, string.Format(format, args));
 
     public Task Error(string message) => WriteToStdout(LogLevel.Error, message);
 
-    public Task Error(string format, params object[] args) =>
-        WriteToStdout(LogLevel.Error, string.Format(format, args));
+    public Task Error(string format, params object[] args) => WriteToStdout(LogLevel.Error, string.Format(format, args));
 
-    public Task Native(string message) =>
-        WriteToStdout(LogLevel.Error, message);
+    public Task Native(string message) => WriteToStdout(LogLevel.Error, message);
 
-    public Task Native(string format, params object[] args) =>
-        WriteToStdout(LogLevel.Native, string.Format(format, args));
+    public Task Native(string format, params object[] args) => WriteToStdout(LogLevel.Native, string.Format(format, args));
 
     private static Task WriteToStdout(LogLevel level, string message)
     {

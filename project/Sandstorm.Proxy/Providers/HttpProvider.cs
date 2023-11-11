@@ -20,9 +20,7 @@ public class HttpProvider
             }
             else
             {
-                LogBase.Info(
-                    $"Failed to retrieve data. Status Code: {response.StatusCode}"
-                );
+                LogBase.Info($"Failed to retrieve data. Status Code: {response.StatusCode}");
                 return string.Empty;
             }
         }

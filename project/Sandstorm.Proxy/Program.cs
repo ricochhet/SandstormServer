@@ -43,32 +43,22 @@ internal class Program
             {
                 try
                 {
-                    modioModObject = FsProvider.ReadAllText(
-                        configuration.SubscriptionObjectPath
-                    );
+                    modioModObject = FsProvider.ReadAllText(configuration.SubscriptionObjectPath);
                 }
                 catch (IOException e)
                 {
-                    LogBase.Error(
-                        $"An error occurred while reading the auth object: {e.Message}"
-                    );
+                    LogBase.Error($"An error occurred while reading the auth object: {e.Message}");
                     modioModObject = string.Empty;
                 }
             }
             else
             {
-                LogBase.Error(
-                    $"Could not find auth object at path: {configuration.SubscriptionObjectPath}"
-                );
+                LogBase.Error($"Could not find auth object at path: {configuration.SubscriptionObjectPath}");
                 CommandLineHelper.Pause();
                 return;
             }
 
-            proxy = new ProxyProvider(
-                configuration.ModioGameId,
-                modioModObject,
-                WindowsAdminHelper.IsAdmin()
-            );
+            proxy = new ProxyProvider(configuration.ModioGameId, modioModObject, WindowsAdminHelper.IsAdmin());
         }
         catch (Exception ex)
         {
@@ -84,13 +74,9 @@ internal class Program
         }
 
         proxy.StartProxy();
-        LogBase.Warn(
-            "WARNING: DO NOT MANUALLY CLOSE THIS WINDOW! If you do and your internet breaks clear your proxy settings and restart your computer."
-        );
+        LogBase.Warn("WARNING: DO NOT MANUALLY CLOSE THIS WINDOW! If you do and your internet breaks clear your proxy settings and restart your computer.");
         LogBase.Info("==============================");
-        LogBase.Info(
-            "Intercepting connections... Now run Insurgency: Sandstorm!"
-        );
+        LogBase.Info("Intercepting connections... Now run Insurgency: Sandstorm!");
         LogBase.Info("Press \"F\" to safely close the server.");
         LogBase.Info("==============================");
 

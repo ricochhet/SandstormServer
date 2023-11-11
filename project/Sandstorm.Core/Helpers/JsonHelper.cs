@@ -7,22 +7,11 @@ public static class JsonHelper
 {
     public static T Read<T>(string pathToFile)
     {
-        return JsonSerializer.Deserialize<T>(
-            FsProvider.ReadAllText(pathToFile)
-        );
+        return JsonSerializer.Deserialize<T>(FsProvider.ReadAllText(pathToFile));
     }
 
-    public static void Write(
-        string folderPath,
-        string fileName,
-        object data,
-        JsonSerializerOptions options = null
-    )
+    public static void Write(string folderPath, string fileName, object data, JsonSerializerOptions options = null)
     {
-        FsProvider.WriteFile(
-            folderPath,
-            fileName,
-            JsonSerializer.Serialize(data, options)
-        );
+        FsProvider.WriteFile(folderPath, fileName, JsonSerializer.Serialize(data, options));
     }
 }

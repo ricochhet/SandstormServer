@@ -14,9 +14,7 @@ public static class WindowsAdminHelper
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                result = new WindowsPrincipal(
-                    WindowsIdentity.GetCurrent()
-                ).IsInRole(WindowsBuiltInRole.Administrator);
+                result = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
             }
         }
         catch (Exception e)
