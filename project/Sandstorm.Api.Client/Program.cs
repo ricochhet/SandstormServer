@@ -64,9 +64,14 @@ internal class Program
             return;
         }
 
-        if (configurationModel.ModioApiKey == null || configurationModel.ModioApiKey == string.Empty)
+        if (
+            configurationModel.ModioApiKey == null
+            || configurationModel.ModioApiKey == string.Empty
+        )
         {
-            LogBase.Error($"SandstormApi requires a valid mod.io API key. Generate one here: https://mod.io/me/access, and place it in {ConfigurationHelper.ConfigurationPath}.");
+            LogBase.Error(
+                $"SandstormApi requires a valid mod.io API key. Generate one here: https://mod.io/me/access, and place it in {ConfigurationHelper.ConfigurationPath}."
+            );
             return;
         }
 
