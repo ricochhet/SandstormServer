@@ -24,8 +24,8 @@ internal class Program
         LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
         ConfigurationHelper.CheckFirstRun();
-        ConfigurationModel configurationModel = ConfigurationHelper.Read();
-        if (configurationModel == null)
+        ConfigurationModel configuration = ConfigurationHelper.Read();
+        if (configuration == null)
         {
             LogBase.Error("Could not read configuration file.");
             PauseAndWarn();
@@ -43,19 +43,16 @@ internal class Program
         string[] inputArgs = args.Skip(1).ToArray();
         if (input == "add")
         {
-            await Add(inputArgs, configurationModel);
+            await Add(inputArgs, configuration);
         }
 
         if (input == "build")
         {
-            Build(inputArgs, configurationModel);
+            Build(inputArgs, configuration);
         }
     }
 
-    private static async Task Add(
-        string[] args,
-        ConfigurationModel configurationModel
-    )
+    private static async Task Add(string[] args, ConfigurationModel config)
     {
         if (args.Length < 3)
         {
@@ -64,10 +61,7 @@ internal class Program
             return;
         }
 
-        if (
-            configurationModel.ModioApiKey == null
-            || configurationModel.ModioApiKey == string.Empty
-        )
+        if (config.ModioApiKey == null || config.ModioApiKey == string.Empty)
         {
             LogBase.Error(
                 $"SandstormApi requires a valid mod.io API key. Generate one here: https://mod.io/me/access, and place it in {ConfigurationHelper.ConfigurationPath}."
@@ -78,13 +72,13 @@ internal class Program
         int gameId = int.Parse(args[0]);
         int modId = int.Parse(args[1]);
         string res = await HttpProvider.Get(
-            $"{configurationModel.ModioApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={configurationModel.ModioApiKey}"
+            $"{config.ModioApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={config.ModioApiKey}"
         );
 
         if (res != string.Empty)
         {
             FsProvider.WriteFile(
-                $"{configurationModel.SandstormDataPath}/{gameId}/Mods",
+                $"{config.SandstormDataPath}/{gameId}/Mods",
                 $"{modId}.json",
                 res
             );
@@ -92,10 +86,7 @@ internal class Program
         }
     }
 
-    private static void Build(
-        string[] args,
-        ConfigurationModel configurationModel
-    )
+    private static void Build(string[] args, ConfigurationModel config)
     {
         if (args.Length < 1)
         {
@@ -105,22 +96,21 @@ internal class Program
         }
 
         int gameId = int.Parse(args[0]);
-        string sandstormDataPath =
-            $"{configurationModel.SandstormDataPath}/{gameId}/";
+        string sandstormDataPath = $"{config.SandstormDataPath}/{gameId}/";
         List<string> modioDataFiles = FsProvider.GetFiles(
             sandstormDataPath + "Mods/",
             "*.json"
         );
         List<object> modioDataObjects = new();
-        foreach (string jsonFile in modioDataFiles)
+        foreach (string data in modioDataFiles)
         {
             if (
-                !configurationModel.DoNotAddToSubscription.Contains(
-                    Path.GetFileNameWithoutExtension(jsonFile)
+                !config.DoNotAddToSubscription.Contains(
+                    Path.GetFileNameWithoutExtension(data)
                 )
             )
             {
-                string jsonString = FsProvider.ReadAllText(jsonFile);
+                string jsonString = FsProvider.ReadAllText(data);
                 object modioDataObject = JsonSerializer.Deserialize<object>(
                     jsonString
                 );
@@ -129,7 +119,7 @@ internal class Program
         }
 
         JsonSerializerOptions options = new() { WriteIndented = true };
-        ModioModObjectModel modIOAuthObject =
+        ModioModObjectModel modioModObject =
             new()
             {
                 Data = modioDataObjects.ToArray(),
@@ -139,7 +129,7 @@ internal class Program
                 ResultTotal = modioDataObjects.Count
             };
 
-        string outputJson = JsonSerializer.Serialize(modIOAuthObject, options);
+        string outputJson = JsonSerializer.Serialize(modioModObject, options);
         FsProvider.WriteFile(
             sandstormDataPath,
             "Subscription.json",

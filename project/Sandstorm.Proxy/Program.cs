@@ -13,7 +13,7 @@ internal class Program
 {
     private static Proxy.ProxyProvider proxy;
 
-    private static void Main(string[] args)
+    private static void Main()
     {
         Console.Title = "SandstormProxy";
         ILogger nativeLogger = new NativeLogger();
@@ -23,21 +23,21 @@ internal class Program
         LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
         ConfigurationHelper.CheckFirstRun();
-        ConfigurationModel configurationModel = ConfigurationHelper.Read();
-        if (configurationModel == null)
+        ConfigurationModel configuration = ConfigurationHelper.Read();
+        if (configuration == null)
         {
             LogBase.Error("Could not read configuration file.");
             PauseAndWarn();
             return;
         }
 
-        string modioAuthObject;
-        if (FsProvider.Exists(configurationModel.SubscriptionObjectPath))
+        string modioModObject;
+        if (FsProvider.Exists(configuration.SubscriptionObjectPath))
         {
             try
             {
-                modioAuthObject = FsProvider.ReadAllText(
-                    configurationModel.SubscriptionObjectPath
+                modioModObject = FsProvider.ReadAllText(
+                    configuration.SubscriptionObjectPath
                 );
             }
             catch (IOException e)
@@ -45,13 +45,13 @@ internal class Program
                 LogBase.Error(
                     $"An error occurred while reading the auth object: {e.Message}"
                 );
-                modioAuthObject = string.Empty;
+                modioModObject = string.Empty;
             }
         }
         else
         {
             LogBase.Error(
-                $"Could not find auth object at path: {configurationModel.SubscriptionObjectPath}"
+                $"Could not find auth object at path: {configuration.SubscriptionObjectPath}"
             );
             PauseAndWarn();
             return;
@@ -60,8 +60,8 @@ internal class Program
         try
         {
             proxy = new Proxy.ProxyProvider(
-                configurationModel.SpecifyModIOGameId,
-                modioAuthObject,
+                configuration.SpecifyModIOGameId,
+                modioModObject,
                 CheckAdmin()
             );
         }

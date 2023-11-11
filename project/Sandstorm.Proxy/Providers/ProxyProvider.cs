@@ -20,22 +20,22 @@ public class ProxyProvider
     private ExplicitProxyEndPoint explicitProxyEndPoint;
 
     private readonly int specifiedGameId;
-    private readonly string modioAuthObject;
+    private readonly string modioModObject;
     private readonly bool admin;
 
     public ProxyProvider(
         int specifiedGameId,
-        string modioAuthObject,
+        string modioModObject,
         bool admin = false
     )
     {
-        if (modioAuthObject == null || modioAuthObject == string.Empty)
+        if (modioModObject == null || modioModObject == string.Empty)
         {
             throw new Exception("Auth object is null or empty.");
         }
 
         this.specifiedGameId = specifiedGameId;
-        this.modioAuthObject = modioAuthObject;
+        this.modioModObject = modioModObject;
         this.admin = admin;
         if (this.admin)
         {
@@ -144,7 +144,7 @@ public class ProxyProvider
                 || path.Contains($"/v1/games/{specifiedGameId}/mods")
             )
             {
-                ResponseHelper.Response(modioAuthObject, e);
+                ResponseHelper.Response(modioModObject, e);
             }
             else if (path.Contains("/v1/me"))
             {
