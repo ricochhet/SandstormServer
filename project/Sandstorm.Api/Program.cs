@@ -9,6 +9,7 @@ using System.Text.Json;
 using Sandstorm.Api.Providers;
 using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
+using Sandstorm.Core.Helpers;
 
 namespace Sandstorm;
 
@@ -28,7 +29,7 @@ internal class Program
         if (configuration == null)
         {
             LogBase.Error("Could not read configuration file.");
-            PauseAndWarn();
+            CommandLineHelper.Pause();
             return;
         }
 
@@ -110,15 +111,10 @@ internal class Program
                 )
             )
             {
-                string jsonString = FsProvider.ReadAllText(data);
-                object modioDataObject = JsonSerializer.Deserialize<object>(
-                    jsonString
-                );
-                modioDataObjects.Add(modioDataObject);
+                modioDataObjects.Add(JsonHelper.Read<object>(data));
             }
         }
 
-        JsonSerializerOptions options = new() { WriteIndented = true };
         ModioModObjectModel modioModObject =
             new()
             {
@@ -129,18 +125,12 @@ internal class Program
                 ResultTotal = modioDataObjects.Count
             };
 
-        string outputJson = JsonSerializer.Serialize(modioModObject, options);
-        FsProvider.WriteFile(
+        JsonSerializerOptions options = new() { WriteIndented = true };
+        JsonHelper.Write(
             sandstormDataPath,
             "Subscription.json",
-            outputJson
+            modioModObject,
+            options
         );
-    }
-
-    private static void PauseAndWarn()
-    {
-        LogBase.Warn("Press \"F\" to safely exit.");
-        while (Console.ReadKey(intercept: true).Key != ConsoleKey.F) { }
-        return;
     }
 }

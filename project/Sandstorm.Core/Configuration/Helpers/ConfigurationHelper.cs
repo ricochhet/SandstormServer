@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Sandstorm.Core.Configuration.Models;
+using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
 
@@ -22,7 +23,6 @@ public static class ConfigurationHelper
         if (!FsProvider.Exists(ConfigurationPath))
         {
             LogBase.Info("Could not find configuration file. Creating...");
-            JsonSerializerOptions options = new() { WriteIndented = true };
             ConfigurationModel configurationModel =
                 new()
                 {
@@ -34,11 +34,14 @@ public static class ConfigurationHelper
                     LoggerOutputStreamPath = "./SandstormServer.log",
                     DoNotAddToSubscription = { "" }
                 };
-            string outputJson = JsonSerializer.Serialize(
+
+            JsonSerializerOptions options = new() { WriteIndented = true };
+            JsonHelper.Write(
+                "./",
+                ConfigurationFileName,
                 configurationModel,
                 options
             );
-            FsProvider.WriteFile("./", ConfigurationFileName, outputJson);
         }
     }
 
@@ -46,10 +49,9 @@ public static class ConfigurationHelper
     {
         if (FsProvider.Exists(ConfigurationPath))
         {
-            string fileData = FsProvider.ReadAllText(ConfigurationPath);
-            ConfigurationModel inputJson =
-                JsonSerializer.Deserialize<ConfigurationModel>(fileData);
-
+            ConfigurationModel inputJson = JsonHelper.Read<ConfigurationModel>(
+                ConfigurationPath
+            );
             if (inputJson != null)
             {
                 return inputJson;

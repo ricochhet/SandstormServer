@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
 using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
-using System.Security.Principal;
+using Sandstorm.Core.Helpers;
+using Sandstorm.Proxy.Helpers;
 
 namespace Sandstorm;
 
@@ -27,7 +27,7 @@ internal class Program
         if (configuration == null)
         {
             LogBase.Error("Could not read configuration file.");
-            PauseAndWarn();
+            CommandLineHelper.Pause();
             return;
         }
 
@@ -53,7 +53,7 @@ internal class Program
             LogBase.Error(
                 $"Could not find auth object at path: {configuration.SubscriptionObjectPath}"
             );
-            PauseAndWarn();
+            CommandLineHelper.Pause();
             return;
         }
 
@@ -62,7 +62,7 @@ internal class Program
             proxy = new Proxy.ProxyProvider(
                 configuration.SpecifyModIOGameId,
                 modioModObject,
-                CheckAdmin()
+                WindowsAdminHelper.IsAdmin()
             );
         }
         catch (Exception ex)
@@ -74,7 +74,7 @@ internal class Program
             LogBase.Error("==============================");
             LogBase.Error(ex.InnerException.Message);
             LogBase.Error(ex.InnerException.StackTrace);
-            while (Console.ReadKey(intercept: true).Key != ConsoleKey.F) { }
+            CommandLineHelper.Pause();
             return;
         }
 
@@ -94,31 +94,5 @@ internal class Program
             LogBase.Info("Exiting...");
             proxy.Stop();
         }
-    }
-
-    private static void PauseAndWarn()
-    {
-        LogBase.Warn("Press \"F\" to safely exit.");
-        while (Console.ReadKey(intercept: true).Key != ConsoleKey.F) { }
-        return;
-    }
-
-    private static bool CheckAdmin()
-    {
-        bool result = false;
-        try
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                result = new WindowsPrincipal(
-                    WindowsIdentity.GetCurrent()
-                ).IsInRole(WindowsBuiltInRole.Administrator);
-            }
-        }
-        catch (Exception e)
-        {
-            LogBase.Error(e.ToString());
-        }
-        return result;
     }
 }
