@@ -3,7 +3,7 @@ using Titanium.Web.Proxy.EventArguments;
 
 namespace Sandstorm.Proxy.Helpers;
 
-public static class ResponseHelper
+public static class ModioResponseHelper
 {
     public static void Response(string response, SessionEventArgs e)
     {

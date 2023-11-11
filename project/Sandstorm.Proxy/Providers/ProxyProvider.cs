@@ -25,7 +25,7 @@ public class ProxyProvider
 
     public ProxyProvider(int specifiedGameId, string modioModObject, bool admin = false)
     {
-        if (modioModObject == null || modioModObject == string.Empty)
+        if (string.IsNullOrEmpty(modioModObject))
         {
             throw new Exception("Auth object is null or empty.");
         }
@@ -106,23 +106,23 @@ public class ProxyProvider
         {
             if (path.Contains("/v1/me/subscribed") || path.Contains($"/v1/games/{specifiedGameId}/mods"))
             {
-                ResponseHelper.Response(modioModObject, e);
+                ModioResponseHelper.Response(modioModObject, e);
             }
             else if (path.Contains("/v1/me"))
             {
-                ResponseHelper.Response(ResponseHelper.User, e);
+                ModioResponseHelper.Response(ModioResponseHelper.User, e);
             }
             else if (path.Contains("/v1/authenticate/terms"))
             {
-                ResponseHelper.Response(ResponseHelper.Terms, e);
+                ModioResponseHelper.Response(ModioResponseHelper.Terms, e);
             }
             else if (path.Contains("/v1/external/steamauth"))
             {
-                ResponseHelper.Response(ResponseHelper.Steam, e);
+                ModioResponseHelper.Response(ModioResponseHelper.Steam, e);
             }
             else
             {
-                ResponseHelper.Response(ResponseHelper.NotFound, e);
+                ModioResponseHelper.Response(ModioResponseHelper.NotFound, e);
                 LogBase.Warn($"WARNING: Host: {host + path} found but has no handle.");
             }
         }
@@ -131,7 +131,7 @@ public class ProxyProvider
             switch (path)
             {
                 default:
-                    ResponseHelper.Response(ResponseHelper.NotFound, e);
+                    ModioResponseHelper.Response(ModioResponseHelper.NotFound, e);
                     break;
             }
         }

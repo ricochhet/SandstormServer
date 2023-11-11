@@ -7,8 +7,6 @@ using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Proxy.Helpers;
 using Sandstorm.Proxy.Providers;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sandstorm;
@@ -17,7 +15,7 @@ internal class Program
 {
     private static ProxyProvider proxy;
 
-    private static async Task Main()
+    private static async Task Main(string[] args)
     {
         Console.Title = "SandstormProxy";
         ILogger logger = new NativeLogger();
@@ -33,11 +31,28 @@ internal class Program
             return;
         }
 
-        await ModioRequestHelper.Get(configuration);
-        ModioRequestHelper.Build(configuration);
+        if (args.Length != 0)
+        {
+            int manualSubscribe = Array.IndexOf(args, "--subscribe");
+            if (manualSubscribe != -1)
+                await ModioRequestHelper.AddAsync(configuration, int.Parse(args[manualSubscribe + 1]));
+
+            int manualBuild = Array.IndexOf(args, "--build");
+            if (manualBuild != -1)
+                ModioRequestHelper.BuildModSubscription(configuration);
+
+            int manualGameId = Array.IndexOf(args, "--gameid");
+            if (manualGameId != -1)
+                configuration.ModioGameId = int.Parse(args[manualGameId + 1]);
+
+            int manualSubscriptionPath = Array.IndexOf(args, "--subpath");
+            if (manualSubscriptionPath != -1)
+                configuration.SubscriptionObjectPath = args[manualSubscriptionPath + 1];
+        }
 
         try
         {
+            await ModioRequestHelper.SubscribeAsync(configuration);
             string modioModObject;
             if (FsProvider.Exists(configuration.SubscriptionObjectPath))
             {

@@ -7,47 +7,79 @@ using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
-using Sandstorm.Proxy.Providers;
 
 namespace Sandstorm.Proxy.Helpers;
 
 public static class ModioRequestHelper
 {
-    public static async Task Get(ConfigurationModel configuration)
+    public static async Task SubscribeAsync(ConfigurationModel configuration)
     {
-        List<string> existingModioMods = new();
-        if (
-            configuration.AddToSubscription.Count == 0
-            || configuration.ModioGameId == -1
-            || configuration.SandstormDataPath == string.Empty
-            || configuration.SandstormDataPath == null
-            || configuration.ModioApiKey == string.Empty
-            || configuration.ModioApiKey == null
-        )
+        if (IsSubscriptionConfigurationInvalid(configuration))
+        {
+            LogBase.Warn("SandstormServer is not configured to subscribe to new mods automatically.");
             return;
+        }
 
-        existingModioMods = FsProvider.GetFiles($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods/", "*.json", true);
+        List<string> existingModioMods = FsProvider.GetFiles($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods/", "*.json", true);
+        foreach (string existingModioMod in existingModioMods)
+        {
+            LogBase.Info($"Subscribed to mod: {existingModioMod}");
+        }
 
-        if (configuration.ModioGameId != -1 && configuration.ModioApiKey != string.Empty && configuration.ModioApiKey != null)
+        int newModsAdded = 0;
+        if (configuration.ModioGameId != -1 && !string.IsNullOrEmpty(configuration.ModioApiKey))
         {
             List<string> modioModIds = configuration.AddToSubscription.Where(p => !existingModioMods.Any(l => l == p)).ToList();
             foreach (string modioModId in modioModIds)
             {
+                LogBase.Info($"Adding new mod: {modioModId}");
                 int modioModIdAsInt = int.Parse(modioModId);
-                string res = await HttpProvider.Get(
-                    $"{configuration.ModioApiUrlBase}/v1/games/{configuration.ModioGameId}/mods/{modioModIdAsInt}?api_key={configuration.ModioApiKey}"
-                );
-
-                if (res != string.Empty)
+                string response = await GetModioApiResponseAsync(configuration, modioModIdAsInt);
+                if (!string.IsNullOrEmpty(response))
                 {
-                    FsProvider.WriteFile($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods", $"{modioModIdAsInt}.json", res);
-                    LogBase.Info($"Writing: {configuration.ModioGameId} {modioModIdAsInt}");
+                    WriteModToFile(configuration, modioModIdAsInt, response);
+                    newModsAdded += 1;
                 }
             }
         }
+
+        if (newModsAdded != 0)
+        {
+            LogBase.Info($"Adding {newModsAdded} new mods to Subscription.json");
+            BuildModSubscription(configuration);
+        }
     }
 
-    public static void Build(ConfigurationModel configuration)
+    public static async Task AddAsync(ConfigurationModel configuration, int modId)
+    {
+        string response = await GetModioApiResponseAsync(configuration, modId);
+        if (!string.IsNullOrEmpty(response))
+        {
+            WriteModToFile(configuration, modId, response);
+        }
+    }
+
+    private static async Task<string> GetModioApiResponseAsync(ConfigurationModel configuration, int modId)
+    {
+        string url = $"{configuration.ModioApiUrlBase}/v1/games/{configuration.ModioGameId}/mods/{modId}?api_key={configuration.ModioApiKey}";
+        return await HttpProvider.Get(url);
+    }
+
+    private static void WriteModToFile(ConfigurationModel configuration, int modId, string response)
+    {
+        FsProvider.WriteFile($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods", $"{modId}.json", response);
+        LogBase.Info($"Writing: {configuration.ModioGameId} {modId}");
+    }
+
+    private static bool IsSubscriptionConfigurationInvalid(ConfigurationModel configuration)
+    {
+        return configuration.AddToSubscription.Count == 0
+            || configuration.ModioGameId == -1
+            || string.IsNullOrEmpty(configuration.SandstormDataPath)
+            || string.IsNullOrEmpty(configuration.ModioApiKey);
+    }
+
+    public static void BuildModSubscription(ConfigurationModel configuration)
     {
         string sandstormDataPath = $"{configuration.SandstormDataPath}/{configuration.ModioGameId}/";
         List<string> modioDataFiles = FsProvider.GetFiles(sandstormDataPath + "Mods/", "*.json");
