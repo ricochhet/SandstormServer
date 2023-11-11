@@ -44,21 +44,20 @@ internal class Program
             int manualGameId = Array.IndexOf(args, "--gameid");
             if (manualGameId != -1)
                 configuration.ModioGameId = int.Parse(args[manualGameId + 1]);
-
-            int manualSubscriptionPath = Array.IndexOf(args, "--subpath");
-            if (manualSubscriptionPath != -1)
-                configuration.SubscriptionObjectPath = args[manualSubscriptionPath + 1];
         }
+        
+        if (configuration.ModioGameId == -1)
+            return;
 
         try
         {
             await ModioRequestHelper.SubscribeAsync(configuration);
             string modioModObject;
-            if (FsProvider.Exists(configuration.SubscriptionObjectPath))
+            if (FsProvider.Exists($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Subscription.json"))
             {
                 try
                 {
-                    modioModObject = FsProvider.ReadAllText(configuration.SubscriptionObjectPath);
+                    modioModObject = FsProvider.ReadAllText($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Subscription.json");
                 }
                 catch (IOException e)
                 {
@@ -68,7 +67,7 @@ internal class Program
             }
             else
             {
-                LogBase.Error($"Could not find auth object at path: {configuration.SubscriptionObjectPath}");
+                LogBase.Error($"Could not find auth object at path: {configuration.SandstormDataPath}/{configuration.ModioGameId}/Subscription.json");
                 CommandLineHelper.Pause();
                 return;
             }

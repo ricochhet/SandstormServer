@@ -27,9 +27,9 @@ public static class ModioRequestHelper
         }
 
         int newModsAdded = 0;
-        if (configuration.ModioGameId != -1 && !string.IsNullOrEmpty(configuration.ModioApiKey))
+        List<string> modioModIds = configuration.AddToSubscription.Where(p => !existingModioMods.Any(l => l == p)).ToList();
+        if (!string.IsNullOrEmpty(configuration.ModioApiKey) && modioModIds.Count != 0)
         {
-            List<string> modioModIds = configuration.AddToSubscription.Where(p => !existingModioMods.Any(l => l == p)).ToList();
             foreach (string modioModId in modioModIds)
             {
                 LogBase.Info($"Adding new mod: {modioModId}");

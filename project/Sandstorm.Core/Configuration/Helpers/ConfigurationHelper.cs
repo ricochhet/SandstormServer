@@ -29,7 +29,6 @@ public static class ConfigurationHelper
                 {
                     ModioGameId = 0,
                     ModioApiKey = "PLACE_API_KEY_HERE",
-                    SubscriptionObjectPath = "./Subscription.json",
                     SandstormDataPath = "./SandstormServerData",
                     ModioApiUrlBase = "https://api.mod.io",
                     LoggerOutputStreamPath = "./SandstormServer.log",
