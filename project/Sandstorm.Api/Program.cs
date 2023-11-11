@@ -102,7 +102,7 @@ internal class Program
             sandstormDataPath + "Mods/",
             "*.json"
         );
-        List<object> modioDataObjects = new();
+        List<object> modioModObjects = new();
         foreach (string data in modioDataFiles)
         {
             if (
@@ -111,18 +111,18 @@ internal class Program
                 )
             )
             {
-                modioDataObjects.Add(JsonHelper.Read<object>(data));
+                modioModObjects.Add(JsonHelper.Read<object>(data));
             }
         }
 
         ModioModObjectModel modioModObject =
             new()
             {
-                Data = modioDataObjects.ToArray(),
-                ResultCount = modioDataObjects.Count,
+                Data = modioModObjects.ToArray(),
+                ResultCount = modioModObjects.Count,
                 ResultOffset = 0,
                 ResultLimit = 100,
-                ResultTotal = modioDataObjects.Count
+                ResultTotal = modioModObjects.Count
             };
 
         JsonSerializerOptions options = new() { WriteIndented = true };

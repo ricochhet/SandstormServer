@@ -6,12 +6,13 @@ using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Proxy.Helpers;
+using Sandstorm.Proxy.Providers;
 
 namespace Sandstorm;
 
 internal class Program
 {
-    private static Proxy.ProxyProvider proxy;
+    private static ProxyProvider proxy;
 
     private static void Main()
     {
@@ -59,7 +60,7 @@ internal class Program
 
         try
         {
-            proxy = new Proxy.ProxyProvider(
+            proxy = new ProxyProvider(
                 configuration.SpecifyModIOGameId,
                 modioModObject,
                 WindowsAdminHelper.IsAdmin()

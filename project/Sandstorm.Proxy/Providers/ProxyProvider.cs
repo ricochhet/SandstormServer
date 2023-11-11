@@ -11,7 +11,7 @@ using Sandstorm.Proxy.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
 
-namespace Sandstorm.Proxy;
+namespace Sandstorm.Proxy.Providers;
 
 public class ProxyProvider
 {

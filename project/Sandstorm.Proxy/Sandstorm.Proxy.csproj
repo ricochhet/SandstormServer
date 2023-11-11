@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <AssemblyName>SandstormProxy</AssemblyName>
-        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <OutputType>Exe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <PlatformTarget>x64</PlatformTarget>
@@ -12,11 +12,9 @@
         <TrimMode>partial</TrimMode>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <DeleteExistingFiles>true</DeleteExistingFiles>
-        <DebugType>None</DebugType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-        <DebugType>embedded</DebugType>
-        <PublishSingleFile>True</PublishSingleFile>
+        <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>true</SelfContained>
     </PropertyGroup>
     <PropertyGroup>
