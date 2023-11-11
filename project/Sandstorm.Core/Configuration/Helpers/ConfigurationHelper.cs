@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json;
 using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
@@ -26,13 +27,14 @@ public static class ConfigurationHelper
             ConfigurationModel configurationModel =
                 new()
                 {
-                    SpecifyModIOGameId = 0,
+                    ModioGameId = 0,
                     ModioApiKey = "PLACE_API_KEY_HERE",
                     SubscriptionObjectPath = "./Subscription.json",
                     SandstormDataPath = "./SandstormServerData",
                     ModioApiUrlBase = "https://api.mod.io",
                     LoggerOutputStreamPath = "./SandstormServer.log",
-                    DoNotAddToSubscription = { "" }
+                    AddToSubscription = new List<string>(),
+                    DoNotAddToSubscription = new List<string>()
                 };
 
             JsonSerializerOptions options = new() { WriteIndented = true };

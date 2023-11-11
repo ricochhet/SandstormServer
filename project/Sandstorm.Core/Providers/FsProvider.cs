@@ -166,6 +166,38 @@ public class FsProvider
         return files;
     }
 
+    public static List<string> GetFiles(
+        string folderPath,
+        string searchPattern,
+        bool withoutExtension = false
+    )
+    {
+        List<string> files = new();
+
+        if (Directory.Exists(folderPath))
+        {
+            foreach (
+                string file in Directory.EnumerateFiles(
+                    folderPath,
+                    searchPattern,
+                    SearchOption.AllDirectories
+                )
+            )
+            {
+                if (withoutExtension == true)
+                {
+                    files.Add(Path.GetFileNameWithoutExtension(file));
+                }
+                else
+                {
+                    files.Add(file);
+                }
+            }
+        }
+
+        return files;
+    }
+
     public static void DeleteEmptyDirectories(string startPath)
     {
         if (string.IsNullOrEmpty(startPath))

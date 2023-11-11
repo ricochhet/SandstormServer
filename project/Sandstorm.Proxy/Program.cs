@@ -7,6 +7,9 @@ using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Proxy.Helpers;
 using Sandstorm.Proxy.Providers;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sandstorm;
 
@@ -14,13 +17,11 @@ internal class Program
 {
     private static ProxyProvider proxy;
 
-    private static void Main()
+    private static async Task Main()
     {
         Console.Title = "SandstormProxy";
-        ILogger nativeLogger = new NativeLogger();
-        ILogger fileStreamLogger = new FileStreamLogger();
-        LogBase.Add(nativeLogger);
-        LogBase.Add(fileStreamLogger);
+        ILogger logger = new NativeLogger();
+        LogBase.Add(logger);
         LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
         ConfigurationHelper.CheckFirstRun();
@@ -32,36 +33,39 @@ internal class Program
             return;
         }
 
-        string modioModObject;
-        if (FsProvider.Exists(configuration.SubscriptionObjectPath))
-        {
-            try
-            {
-                modioModObject = FsProvider.ReadAllText(
-                    configuration.SubscriptionObjectPath
-                );
-            }
-            catch (IOException e)
-            {
-                LogBase.Error(
-                    $"An error occurred while reading the auth object: {e.Message}"
-                );
-                modioModObject = string.Empty;
-            }
-        }
-        else
-        {
-            LogBase.Error(
-                $"Could not find auth object at path: {configuration.SubscriptionObjectPath}"
-            );
-            CommandLineHelper.Pause();
-            return;
-        }
+        await ModioRequestHelper.Get(configuration);
+        ModioRequestHelper.Build(configuration);
 
         try
         {
+            string modioModObject;
+            if (FsProvider.Exists(configuration.SubscriptionObjectPath))
+            {
+                try
+                {
+                    modioModObject = FsProvider.ReadAllText(
+                        configuration.SubscriptionObjectPath
+                    );
+                }
+                catch (IOException e)
+                {
+                    LogBase.Error(
+                        $"An error occurred while reading the auth object: {e.Message}"
+                    );
+                    modioModObject = string.Empty;
+                }
+            }
+            else
+            {
+                LogBase.Error(
+                    $"Could not find auth object at path: {configuration.SubscriptionObjectPath}"
+                );
+                CommandLineHelper.Pause();
+                return;
+            }
+
             proxy = new ProxyProvider(
-                configuration.SpecifyModIOGameId,
+                configuration.ModioGameId,
                 modioModObject,
                 WindowsAdminHelper.IsAdmin()
             );

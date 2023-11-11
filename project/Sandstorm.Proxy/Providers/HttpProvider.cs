@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Sandstorm.Core.Logger;
 
-namespace Sandstorm.Api.Providers;
+namespace Sandstorm.Proxy.Providers;
 
 public class HttpProvider
 {
