@@ -1,12 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <AssemblyName>SandstormProxy</AssemblyName>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
+        <PlatformTarget>x64</PlatformTarget>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <PublishDir>.\bin\publish</PublishDir>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <TrimMode>partial</TrimMode>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <DeleteExistingFiles>true</DeleteExistingFiles>
+        <DebugType>None</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+        <DebugType>embedded</DebugType>
+        <PublishSingleFile>True</PublishSingleFile>
+        <SelfContained>true</SelfContained>
     </PropertyGroup>
     <PropertyGroup>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\ThirdParty\Titanium.Web.Proxy\Titanium.Web.Proxy.csproj" />
         <ProjectReference Include="..\Sandstorm.Core\Sandstorm.Core.csproj" />

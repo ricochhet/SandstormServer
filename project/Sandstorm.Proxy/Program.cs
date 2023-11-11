@@ -11,7 +11,7 @@ namespace Sandstorm;
 
 internal class Program
 {
-    private static Proxy.Proxy proxy;
+    private static Proxy.ProxyProvider proxy;
 
     private static void Main(string[] args)
     {
@@ -59,7 +59,7 @@ internal class Program
 
         try
         {
-            proxy = new Proxy.Proxy(
+            proxy = new Proxy.ProxyProvider(
                 configurationModel.SpecifyModIOGameId,
                 modioAuthObject,
                 CheckAdmin()

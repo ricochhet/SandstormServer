@@ -8,7 +8,7 @@ $projectPath = "project"
 Set-Location -Path $projectPath
 
 if ($build -eq "proxy" -or $build -eq "api") {
-    $projectName = "Sandstorm.${build}.Client"
+    $projectName = "Sandstorm.${build}"
 
     if ($config -eq "Release" -or $config -eq "Debug") {
         dotnet build "$projectName" --configuration $config

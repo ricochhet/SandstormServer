@@ -5,9 +5,9 @@ A mod.io proxy server to intercept the auth request of mod.io and respond with o
 
 ## Guide
 
-### Sandstorm.Proxy.Client
+### Sandstorm.Proxy
 - Build: `./install.ps1 -build proxy` or `dotnet build ./Sandstorm.Proxy.Cient` (From `project` root).
-- Usage: `SandstormProxy <path/to/model.json>` (See Sandstorm.Api.Client).
+- Usage: `SandstormProxy <path/to/model.json>` (See Sandstorm.Api).
 - **READ:** Upon first run the proxy will require you install a certificate (`rootCert.pfx`). This is required to handle HTTPS traffic (YOU MUST INSTALL IT FOR EVERYTHING TO WORK CORRECTLY!). Additionally, the proxy may fail to find `rootCert.pfx` on first run, this does not affect the proxy, but the game itself may be unable to interact with it. You will have to restart the proxy for it to find the `rootCert.pfx`.
 #### Quirks
 - Whether it's exclusive to the tested game (Insurgency: Sandstorm) or not, the proxy settings of your device must be set to use `127.0.0.1`, using localhost makes the game ignore the proxy settings entirely. If in the future it is found different games behave differently, this may become an explicit CLI setting.
@@ -16,8 +16,8 @@ A mod.io proxy server to intercept the auth request of mod.io and respond with o
 - The proxy does not handle every single `mod.io` request. It will handle anything under the `mod.io` domain by sending a 404 (Not Found) under everything except the `/v1/me/subscribed` path. In which it will send the appropriate data model. Mod.io cdn is not handled whatsoever, so you may still see images or possibly other information despite being "offline." Additionally, CDN images and thumbnails are cached.
 - Due to the proxy sending a 404 (Not Found) request to most paths, the in-game mod browser and subscribed mods section will appear blank, but your mods should still be effective.
 
-### Sandstorm.Api.Cient
-Sandstorm.Api.Client requires a valid API key to use. This can be obtained by creating an account or signing into [mod.io](https://mod.io/g), going into the bottom right, and looking for the "My account" button. Click "Access" and folowing the steps to create an API access token.
+### Sandstorm.Api
+Sandstorm.Api requires a valid API key to use. This can be obtained by creating an account or signing into [mod.io](https://mod.io/g), going into the bottom right, and looking for the "My account" button. Click "Access" and folowing the steps to create an API access token.
 
 *Sandstorm.Api does not assist in downloading and installing mods. To download and install mods, you must do so directly through [mod.io](https://mod.io/g).
 

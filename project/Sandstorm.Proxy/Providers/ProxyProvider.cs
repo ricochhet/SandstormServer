@@ -13,7 +13,7 @@ using Sandstorm.Core.Providers;
 
 namespace Sandstorm.Proxy;
 
-public class Proxy
+public class ProxyProvider
 {
     private readonly ProxyServer proxyServer;
 
@@ -23,7 +23,7 @@ public class Proxy
     private readonly string modioAuthObject;
     private readonly bool admin;
 
-    public Proxy(
+    public ProxyProvider(
         int specifiedGameId,
         string modioAuthObject,
         bool admin = false
