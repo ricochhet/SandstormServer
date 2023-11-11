@@ -18,8 +18,8 @@ internal class Program
     private static async Task Main(string[] args)
     {
         Console.Title = "SandstormProxy";
-        ILogger logger = new NativeLogger();
-        LogBase.Add(logger);
+        LogBase.Add(new NativeLogger());
+        LogBase.Add(new FileStreamLogger());
         LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
         ConfigurationHelper.CheckFirstRun();
@@ -88,7 +88,7 @@ internal class Program
         }
 
         proxy.StartProxy();
-        LogBase.Warn("WARNING: DO NOT MANUALLY CLOSE THIS WINDOW! If you do and your internet breaks clear your proxy settings and restart your computer.");
+        LogBase.Warn("DO NOT MANUALLY CLOSE THIS WINDOW! If you do and your internet breaks clear your proxy settings and restart your computer.");
         LogBase.Info("==============================");
         LogBase.Info("Intercepting connections... Now run Insurgency: Sandstorm!");
         LogBase.Info("Press \"F\" to safely close the server.");

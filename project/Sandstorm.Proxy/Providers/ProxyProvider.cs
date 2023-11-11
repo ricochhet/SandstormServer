@@ -123,7 +123,7 @@ public class ProxyProvider
             else
             {
                 ModioResponseHelper.Response(ModioResponseHelper.NotFound, e);
-                LogBase.Warn($"WARNING: Host: {host + path} found but has no handle.");
+                LogBase.Warn($"Found: {host + path}, but it has no handle.");
             }
         }
         else if (host.Contains("mod.io"))

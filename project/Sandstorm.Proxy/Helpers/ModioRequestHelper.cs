@@ -20,13 +20,8 @@ public static class ModioRequestHelper
             return;
         }
 
-        List<string> existingModioMods = FsProvider.GetFiles($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods/", "*.json", true);
-        foreach (string existingModioMod in existingModioMods)
-        {
-            LogBase.Info($"Subscribed to mod: {existingModioMod}");
-        }
-
         int newModsAdded = 0;
+        List<string> existingModioMods = FsProvider.GetFiles($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods/", "*.json", true);
         List<string> modioModIds = configuration.AddToSubscription.Where(p => !existingModioMods.Any(l => l == p)).ToList();
         if (!string.IsNullOrEmpty(configuration.ModioApiKey) && modioModIds.Count != 0)
         {
