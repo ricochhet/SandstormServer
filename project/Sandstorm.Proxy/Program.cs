@@ -33,6 +33,10 @@ internal class Program
 
         if (args.Length != 0)
         {
+            int manualGameId = Array.IndexOf(args, "--gameid");
+            if (manualGameId != -1)
+                configuration.ModioGameId = int.Parse(args[manualGameId + 1]);
+
             int manualSubscribe = Array.IndexOf(args, "--subscribe");
             if (manualSubscribe != -1)
                 await ModioRequestHelper.AddAsync(configuration, int.Parse(args[manualSubscribe + 1]));
@@ -40,12 +44,8 @@ internal class Program
             int manualBuild = Array.IndexOf(args, "--build");
             if (manualBuild != -1)
                 ModioRequestHelper.BuildModSubscription(configuration);
-
-            int manualGameId = Array.IndexOf(args, "--gameid");
-            if (manualGameId != -1)
-                configuration.ModioGameId = int.Parse(args[manualGameId + 1]);
         }
-        
+
         if (configuration.ModioGameId == -1)
             return;
 
