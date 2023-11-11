@@ -7,7 +7,7 @@ $projectPath = "project"
 
 Set-Location -Path $projectPath
 
-if ($build -eq "proxy" -or $build -eq "api") {
+if ($build -eq "proxy") {
     $projectName = "Sandstorm.${build}"
 
     if ($config -eq "Release" -or $config -eq "Debug") {
@@ -18,7 +18,7 @@ if ($build -eq "proxy" -or $build -eq "api") {
         Write-Host "Invalid configuration: $config"
     }
 } else {
-    Write-Host "Specify either 'proxy' or 'api'"
+    Write-Host "Invalid project: $build"
 }
 
 Set-Location -Path "..\"
