@@ -9,8 +9,6 @@ using System.Text.Json;
 using Sandstorm.Api.Providers;
 using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
-using Sandstorm.Api.Configuration.Models;
-using Sandstorm.Api.Configuration.Helpers;
 
 namespace Sandstorm;
 
@@ -34,18 +32,6 @@ internal class Program
             return;
         }
 
-        ApiSubscriptionConfigHelper.CheckFirstRun();
-        ApiSubscriptionConfigModel apiSubscriptionConfigModel =
-            ApiSubscriptionConfigHelper.Read();
-        if (apiSubscriptionConfigModel == null)
-        {
-            LogBase.Error(
-                "Could not read api subscription configuration file."
-            );
-            PauseAndWarn();
-            return;
-        }
-
         if (args.Length < 1)
         {
             LogBase.Error("Usage: SandstormApi <add/build> <args>");
@@ -62,7 +48,7 @@ internal class Program
 
         if (input == "build")
         {
-            Build(inputArgs, configurationModel, apiSubscriptionConfigModel);
+            Build(inputArgs, configurationModel);
         }
     }
 
@@ -78,7 +64,7 @@ internal class Program
             return;
         }
 
-        if (configurationModel.ModIOApiKey == null || configurationModel.ModIOApiKey == string.Empty)
+        if (configurationModel.ModioApiKey == null || configurationModel.ModioApiKey == string.Empty)
         {
             LogBase.Error($"SandstormApi requires a valid mod.io API key. Generate one here: https://mod.io/me/access, and place it in {ConfigurationHelper.ConfigurationPath}.");
             return;
@@ -87,7 +73,7 @@ internal class Program
         int gameId = int.Parse(args[0]);
         int modId = int.Parse(args[1]);
         string res = await HttpProvider.Get(
-            $"{configurationModel.ModIOApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={configurationModel.ModIOApiKey}"
+            $"{configurationModel.ModioApiUrlBase}/v1/games/{gameId}/mods/{modId}?api_key={configurationModel.ModioApiKey}"
         );
 
         if (res != string.Empty)
@@ -103,8 +89,7 @@ internal class Program
 
     private static void Build(
         string[] args,
-        ConfigurationModel configurationModel,
-        ApiSubscriptionConfigModel apiSubscriptionConfigModel
+        ConfigurationModel configurationModel
     )
     {
         if (args.Length < 1)
@@ -125,7 +110,7 @@ internal class Program
         foreach (string jsonFile in modioDataFiles)
         {
             if (
-                !apiSubscriptionConfigModel.DoNotAddToSubscription.Contains(
+                !configurationModel.DoNotAddToSubscription.Contains(
                     Path.GetFileNameWithoutExtension(jsonFile)
                 )
             )
@@ -139,7 +124,7 @@ internal class Program
         }
 
         JsonSerializerOptions options = new() { WriteIndented = true };
-        ModIOAuthObject modIOAuthObject =
+        ModioModObjectModel modIOAuthObject =
             new()
             {
                 Data = modioDataObjects.ToArray(),

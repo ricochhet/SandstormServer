@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace Sandstorm.Api.Configuration.Models;
+namespace Sandstorm.Core.Configuration.Models;
 
-public class ModIOAuthObject
+public class ModioModObjectModel
 {
     [JsonPropertyName("data")]
     public object[] Data { get; set; }
