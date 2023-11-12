@@ -5,24 +5,33 @@ A mod.io proxy server to intercept the auth request of mod.io and respond with o
 
 Upon first run the proxy will require you install a certificate (`rootCert.pfx`). This is required to handle HTTPS traffic (YOU MUST INSTALL IT FOR EVERYTHING TO WORK CORRECTLY!). Additionally, the proxy may fail to find `rootCert.pfx` on first run, this does not affect the proxy, but the game itself may be unable to interact with it. You will have to restart the proxy for it to find the `rootCert.pfx`.
 
+## Privacy
+SandstormServer is an open source project. Your commit credentials as author of a commit will be visible by anyone. Please make sure you understand this before submitting a PR.
+Feel free to use a "fake" username and email on your commits by using the following commands:
+```bash
+git config --local user.name "USERNAME"
+git config --local user.email "USERNAME@SOMETHING.com"
+```
+
 ## Requirements
 - .NET 7 SDK
 - Visual Studio Code
 
 ## Build
-
-#### For Users
 The primary way to build is using [Cake](https://cakebuild.net/).
 
 1. Install Cake: `dotnet tool install Cake.Tool --version 3.2.0`
 2. Run `dotnet-cake build.cake` (from `/project/` root).
 3. Output will be located in `project/Build/*`.
 
-#### For Developers
-If you intend to publish a build, use the above information.
+Files placed in `{root}/bin/SandstormServer_Data` will be copied over to `project/Build`.
+
+### Developers
+If you intend to publish a build, use the above guide.
 
 1. Run `install.ps1 -build <project> -config <config>`
-    - The only valid option for `<project>` right now is `proxy`.
+    - `<project>` options:
+        - `proxy`
     - `<config>` options:
         - `Release` | `Release-Publish`
         - `Debug` | `Release-Debug`
@@ -31,7 +40,7 @@ If you intend to publish a build, use the above information.
 ## Running
 The nature of this project attempting to be as dynamic as possible means it comes with some prior setup to make the most out of.
 
-1. Run the program once to generate the programs configuration file: `SandstormServerCfg.json`.
+1. Run the program once to generate the programs configuration file: `SandstormServer.json`.
 2. Exit out of the program and modify the `ModioGameId` field to your desired game id.
 3. Generate an API key for Mod.io at [https://mod.io/me/access](https://mod.io/me/access).
 4. Replace the `PLACE_API_KEY_HERE` text in the configuration file with your API key.
@@ -52,9 +61,9 @@ The API requires a valid API key to use. Go to [https://mod.io/me/access](https:
     - `--gameid <int>`
         - Specify the game id. This will override the game id specified in your configuration file.
     - `--subscribe <int>`
-        - Manually subscribe to a mod. This function uses the [Get Mod](https://docs.mod.io/#get-mod) request to fetch a JSON [mod object](https://docs.mod.io/#mod-object). Upon a successful request, the mod object will be written to a local JSON file (`./SandstormServerData/{gameId}/Mods/*.json`).
+        - Manually subscribe to a mod. This function uses the [Get Mod](https://docs.mod.io/#get-mod) request to fetch a JSON [mod object](https://docs.mod.io/#mod-object). Upon a successful request, the mod object will be written to a local JSON file (`./SandstormServer_Data/{gameId}/Mods/*.json`).
     - `--build`
-        - The `build` function will grab all mod object JSONs and combine them into an array of mod objects (`./SandstormServerData/{gameId}/Subscription.json`).
+        - The `build` function will grab all mod object JSONs and combine them into an array of mod objects (`./SandstormServer_Data/{gameId}/Subscription.json`).
 
 ## Titanium.Web.Proxy
 The included version of Titanium.Web.Proxy has a few differences from the `develop` branch and NuGet.

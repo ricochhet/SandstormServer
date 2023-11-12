@@ -9,6 +9,7 @@ var csprojPaths = GetFiles("./**/Sandstorm.*(Proxy).csproj");
 var delPaths = GetDirectories("./**/*(obj|bin)");
 var licenseFile = "../LICENSE";
 var publishRuntime = "win10-x64";
+var launcherDebugFolder = "../bin/SandstormServer";
 
 // Clean build directory and remove obj / bin folder from projects
 Task("Clean")
@@ -47,6 +48,11 @@ Task("CopyBuildData")
     .IsDependentOn("Publish")
     .Does(() => 
     {
+        if (DirectoryExists(launcherDebugFolder))
+        {
+            CopyDirectory(launcherDebugFolder, buildDir);
+        }
+
         CopyFile(licenseFile, $"{buildDir}/LICENSE.txt");
     });
 

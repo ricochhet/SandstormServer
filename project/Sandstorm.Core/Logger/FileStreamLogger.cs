@@ -1,5 +1,5 @@
 ﻿using Sandstorm.Core.Configuration.Enums;
-using Sandstorm.Core.Configuration.Structs;
+using Sandstorm.Core.Configuration.Helpers;
 using System;
 using System.IO;
 using System.Text;
@@ -11,7 +11,7 @@ namespace Sandstorm.Core.Logger;
 public class FileStreamLogger : ILogger, IDisposable
 {
     private static readonly SemaphoreSlim Semaphore = new(1);
-    private static readonly FileStream Stream = File.OpenWrite(LogConfiguration.OutputPath);
+    private static readonly FileStream Stream = File.OpenWrite(ConfigurationHelper.LogFilePath);
 
     public Task Debug(string message) => WriteToBuffer(LogLevel.Debug, message);
 

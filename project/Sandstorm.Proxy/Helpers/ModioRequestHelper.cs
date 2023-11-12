@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Sandstorm.Core.Configuration.Helpers;
 using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
@@ -21,7 +22,7 @@ public static class ModioRequestHelper
         }
 
         int newModsAdded = 0;
-        List<string> existingModioMods = FsProvider.GetFiles($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods/", "*.json", true);
+        List<string> existingModioMods = FsProvider.GetFiles($"{ConfigurationHelper.SandstormDataPath}/{configuration.ModioGameId}/Mods/", "*.json", true);
         List<string> modioModIds = configuration.AddToSubscription.Where(p => !existingModioMods.Any(l => l == p)).ToList();
         if (!string.IsNullOrEmpty(configuration.ModioApiKey) && modioModIds.Count != 0)
         {
@@ -61,7 +62,7 @@ public static class ModioRequestHelper
 
     private static void WriteModToFile(ConfigurationModel configuration, int modId, string response)
     {
-        FsProvider.WriteFile($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods", $"{modId}.json", response);
+        FsProvider.WriteFile($"{ConfigurationHelper.SandstormDataPath}/{configuration.ModioGameId}/Mods", $"{modId}.json", response);
         LogBase.Info($"Saving mod: {modId}");
     }
 
@@ -69,13 +70,13 @@ public static class ModioRequestHelper
     {
         return configuration.AddToSubscription.Count == 0
             || configuration.ModioGameId == -1
-            || string.IsNullOrEmpty(configuration.SandstormDataPath)
+            || string.IsNullOrEmpty(ConfigurationHelper.SandstormDataPath)
             || string.IsNullOrEmpty(configuration.ModioApiKey);
     }
 
     public static void BuildModSubscription(ConfigurationModel configuration)
     {
-        string sandstormDataPath = $"{configuration.SandstormDataPath}/{configuration.ModioGameId}/";
+        string sandstormDataPath = $"{ConfigurationHelper.SandstormDataPath}/{configuration.ModioGameId}/";
         List<string> modioDataFiles = FsProvider.GetFiles(sandstormDataPath + "Mods/", "*.json");
         List<object> modioModObjects = new();
         foreach (string data in modioDataFiles)
