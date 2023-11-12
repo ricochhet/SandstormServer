@@ -25,11 +25,6 @@ public class ProxyProvider
 
     public ProxyProvider(int specifiedGameId, string modioModObject, bool admin = false)
     {
-        if (string.IsNullOrEmpty(modioModObject))
-        {
-            throw new Exception("Auth object is null or empty.");
-        }
-
         this.specifiedGameId = specifiedGameId;
         this.modioModObject = modioModObject;
         this.admin = admin;

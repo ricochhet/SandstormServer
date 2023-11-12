@@ -9,7 +9,6 @@ var csprojPaths = GetFiles("./**/Sandstorm.*(Proxy).csproj");
 var delPaths = GetDirectories("./**/*(obj|bin)");
 var licenseFile = "../LICENSE";
 var publishRuntime = "win10-x64";
-var launcherDebugFolder = "./Sandstorm.Proxy/bin/Debug/net7.0/win10-x64";
 
 // Clean build directory and remove obj / bin folder from projects
 Task("Clean")

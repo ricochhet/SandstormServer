@@ -27,7 +27,7 @@ public static class ConfigurationHelper
             ConfigurationModel configurationModel =
                 new()
                 {
-                    ModioGameId = 0,
+                    ModioGameId = -1,
                     ModioApiKey = "PLACE_API_KEY_HERE",
                     SandstormDataPath = "./SandstormServerData",
                     ModioApiUrlBase = "https://api.mod.io",

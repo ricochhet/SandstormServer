@@ -55,7 +55,14 @@ internal class Program
 
         if (configuration.AddToSubscription.Count == 0)
         {
-            LogBase.Warn("The mods to add to the subscription have not been set in the configuration file.");
+            LogBase.Warn("The mod subscriptions have not been set in the configuration file.");
+            CommandLineHelper.Pause();
+            return;
+        }
+
+        if (configuration.ModioApiKey == "PLACE_API_KEY_HERE" || string.IsNullOrEmpty(configuration.ModioApiKey))
+        {
+            LogBase.Warn("The mod.io API key has not been set in the configuration file.");
             CommandLineHelper.Pause();
             return;
         }
@@ -63,25 +70,34 @@ internal class Program
         try
         {
             await ModioRequestHelper.SubscribeAsync(configuration);
-            string modioModObject;
-            if (FsProvider.Exists($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Subscription.json"))
+            string subscriptionFilePath = $"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Subscription.json";
+            if (!FsProvider.Exists(subscriptionFilePath))
             {
-                try
-                {
-                    modioModObject = FsProvider.ReadAllText($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Subscription.json");
-                }
-                catch (IOException e)
-                {
-                    LogBase.Error($"An error occurred while reading the auth object: {e.Message}");
-                    modioModObject = string.Empty;
-                }
-            }
-            else
-            {
-                LogBase.Error($"Could not find auth object at path: {configuration.SandstormDataPath}/{configuration.ModioGameId}/Subscription.json");
+                LogBase.Error($"Could not find the mod subscription data at: {subscriptionFilePath}");
                 CommandLineHelper.Pause();
                 return;
             }
+            
+            string modioModObject;
+            try
+            {
+                string fileData = FsProvider.ReadAllText(subscriptionFilePath);
+                if (string.IsNullOrEmpty(fileData))
+                {
+                    LogBase.Error("The mod subscription data is either null or empty.");
+                    CommandLineHelper.Pause();
+                    return;
+                }
+                modioModObject = fileData;
+            }
+            catch (IOException e)
+            {
+                LogBase.Error($"An error occurred while reading the mod subscription data: {e.Message}");
+                modioModObject = string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(modioModObject))
+                return;
 
             proxy = new ProxyProvider(configuration.ModioGameId, modioModObject, WindowsAdminHelper.IsAdmin());
         }

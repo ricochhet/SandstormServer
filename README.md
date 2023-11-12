@@ -10,11 +10,23 @@ Upon first run the proxy will require you install a certificate (`rootCert.pfx`)
 - Visual Studio Code
 
 ## Build
+
+#### For Users
 The primary way to build is using [Cake](https://cakebuild.net/).
 
 1. Install Cake: `dotnet tool install Cake.Tool --version 3.2.0`
 2. Run `dotnet-cake build.cake` (from `/project/` root).
 3. Output will be located in `project/Build/*`.
+
+#### For Developers
+If you intend to publish a build, use the above information.
+
+1. Run `install.ps1 -build <project> -config <config>`
+    - The only valid option for `<project>` right now is `proxy`.
+    - `<config>` options:
+        - `Release` | `Release-Publish`
+        - `Debug` | `Release-Debug`
+2. Output will be located in `project/Sandstorm.Proxy/bin/{Release/Debug/publish}/net7.0/win10-x64`
 
 ## Running
 The nature of this project attempting to be as dynamic as possible means it comes with some prior setup to make the most out of.

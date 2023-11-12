@@ -27,7 +27,6 @@ public static class ModioRequestHelper
         {
             foreach (string modioModId in modioModIds)
             {
-                LogBase.Info($"Adding new mod: {modioModId}");
                 int modioModIdAsInt = int.Parse(modioModId);
                 string response = await GetModioApiResponseAsync(configuration, modioModIdAsInt);
                 if (!string.IsNullOrEmpty(response))
@@ -63,7 +62,7 @@ public static class ModioRequestHelper
     private static void WriteModToFile(ConfigurationModel configuration, int modId, string response)
     {
         FsProvider.WriteFile($"{configuration.SandstormDataPath}/{configuration.ModioGameId}/Mods", $"{modId}.json", response);
-        LogBase.Info($"Writing: {configuration.ModioGameId} {modId}");
+        LogBase.Info($"Saving mod: {modId}");
     }
 
     private static bool IsSubscriptionConfigurationInvalid(ConfigurationModel configuration)
