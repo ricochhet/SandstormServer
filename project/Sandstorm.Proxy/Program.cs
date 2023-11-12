@@ -26,7 +26,7 @@ internal class Program
         ConfigurationModel configuration = ConfigurationHelper.Read();
         if (configuration == null)
         {
-            LogBase.Error("Could not read configuration file.");
+            LogBase.Error("The configuration file could not be read, make sure it is placed next to SandstormProxy.exe and try again.");
             CommandLineHelper.Pause();
             return;
         }
@@ -47,7 +47,18 @@ internal class Program
         }
 
         if (configuration.ModioGameId == -1)
+        {
+            LogBase.Warn("The game id has not been set in the configuration file.");
+            CommandLineHelper.Pause();
             return;
+        }
+
+        if (configuration.AddToSubscription.Count == 0)
+        {
+            LogBase.Warn("The mods to add to the subscription have not been set in the configuration file.");
+            CommandLineHelper.Pause();
+            return;
+        }
 
         try
         {

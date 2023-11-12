@@ -23,7 +23,7 @@ public static class ConfigurationHelper
     {
         if (!FsProvider.Exists(ConfigurationPath))
         {
-            LogBase.Info("Could not find configuration file. Creating...");
+            LogBase.Info("Setup: Creating configuration file...");
             ConfigurationModel configurationModel =
                 new()
                 {
