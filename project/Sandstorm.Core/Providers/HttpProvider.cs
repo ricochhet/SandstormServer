@@ -19,7 +19,7 @@ public class HttpProvider
             {
                 return await response.Content.ReadAsStringAsync();
             }
-            
+
             LogBase.Error($"Failed to retrieve data. Status Code: {response.StatusCode}");
             return string.Empty;
         }

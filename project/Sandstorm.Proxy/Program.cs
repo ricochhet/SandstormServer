@@ -77,7 +77,7 @@ internal class Program
                 CommandLineHelper.Pause();
                 return;
             }
-            
+
             string modioModObject;
             try
             {
