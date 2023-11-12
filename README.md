@@ -29,13 +29,15 @@ Files placed in `{root}/bin/SandstormServer_Data` will be copied over to `projec
 ### Developers
 If you intend to publish a build, use the above guide.
 
-1. Run `install.ps1 -build <project> -config <config>`
+1. Install tools via `dotnet tool restore`.
+    - If you make any changes to the code use `dotnet csharpier .` in the project root to format.
+2. Run `install.ps1 -build <project> -config <config>`
     - `<project>` options:
         - `proxy`
     - `<config>` options:
         - `Release` | `Release-Publish`
         - `Debug` | `Release-Debug`
-2. Output will be located in `project/Sandstorm.Proxy/bin/{Release/Debug/publish}/net7.0/win10-x64`
+3. Output will be located in `project/Sandstorm.Proxy/bin/{Release/Debug/publish}/net7.0/win10-x64`
 
 ## Running
 The nature of this project attempting to be as dynamic as possible means it comes with some prior setup to make the most out of.
