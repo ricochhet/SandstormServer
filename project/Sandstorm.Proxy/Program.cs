@@ -70,7 +70,7 @@ internal class Program
         try
         {
             await ModioRequestHelper.SubscribeAsync(configuration);
-            string subscriptionFilePath = $"{ConfigurationHelper.ConfigFilePath}/{configuration.ModioGameId}/Subscription.json";
+            string subscriptionFilePath = Path.Combine(ConfigurationHelper.ConfigFilePath, configuration.ModioGameId.ToString(), "Subscription.json");
             if (!FsProvider.Exists(subscriptionFilePath))
             {
                 LogBase.Error($"Could not find the mod subscription data at: {subscriptionFilePath}");

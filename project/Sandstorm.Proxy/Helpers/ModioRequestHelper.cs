@@ -21,27 +21,27 @@ public static class ModioRequestHelper
             return;
         }
 
-        int newModsAdded = 0;
+        int newModsCount = 0;
         string folderPath = Path.Combine(ConfigurationHelper.SandstormDataPath, configuration.ModioGameId.ToString(), "Mods");
-        List<string> existingModioMods = FsProvider.GetFiles(folderPath, "*.json", true);
-        List<string> modioModIds = configuration.AddToSubscription.Where(p => !existingModioMods.Any(l => l == p)).ToList();
-        if (!string.IsNullOrEmpty(configuration.ModioApiKey) && modioModIds.Count != 0)
+        List<string> existingModioModFiles = FsProvider.GetFiles(folderPath, "*.json", true);
+        List<string> modioModIdFiles = configuration.AddToSubscription.Where(p => !existingModioModFiles.Any(l => l == p)).ToList();
+        if (!string.IsNullOrEmpty(configuration.ModioApiKey) && modioModIdFiles.Count != 0)
         {
-            foreach (string modioModId in modioModIds)
+            foreach (string modioModIdFile in modioModIdFiles)
             {
-                int modioModIdAsInt = int.Parse(modioModId);
-                string response = await GetModioApiResponseAsync(configuration, modioModIdAsInt);
+                int modioModId = int.Parse(modioModIdFile);
+                string response = await GetModioApiResponseAsync(configuration, modioModId);
                 if (!string.IsNullOrEmpty(response))
                 {
-                    WriteModToFile(configuration, modioModIdAsInt, response);
-                    newModsAdded += 1;
+                    WriteModToFile(configuration, modioModId, response);
+                    newModsCount += 1;
                 }
             }
         }
 
-        if (newModsAdded != 0)
+        if (newModsCount != 0)
         {
-            LogBase.Info($"Adding {newModsAdded} new mods to Subscription.json");
+            LogBase.Info($"Adding {newModsCount} new mods to Subscription.json");
             BuildModSubscription(configuration);
         }
     }
