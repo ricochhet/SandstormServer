@@ -1,22 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <AssemblyName>SandstormProxy</AssemblyName>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <OutputType>Exe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
-        <PlatformTarget>x64</PlatformTarget>
-        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <PublishDir>.\bin\publish</PublishDir>
+        <!--
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PlatformTarget>x64</PlatformTarget>
         <PublishReadyToRun>true</PublishReadyToRun>
         <TrimMode>partial</TrimMode>
-        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <DeleteExistingFiles>true</DeleteExistingFiles>
+        -->
     </PropertyGroup>
+    <!--
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
         <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>true</SelfContained>
     </PropertyGroup>
+    -->
     <PropertyGroup>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
