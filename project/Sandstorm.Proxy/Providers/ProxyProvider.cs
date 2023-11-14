@@ -10,6 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using Sandstorm.Proxy.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
+using System.Runtime.InteropServices;
 
 namespace Sandstorm.Proxy.Providers;
 
@@ -22,12 +23,14 @@ public class ProxyProvider
     private readonly int id;
     private readonly string response;
     private readonly bool admin;
+    private readonly LocalHostAddr localHostAddr = LocalHostAddr.IP;
 
-    public ProxyProvider(int id, string response, bool admin = false)
+    public ProxyProvider(int id, string response, bool admin = false, LocalHostAddr localHostAddr = LocalHostAddr.IP)
     {
         this.id = id;
         this.response = response;
         this.admin = admin;
+        this.localHostAddr = localHostAddr;
         if (this.admin)
         {
             proxyServer = new ProxyServer(userTrustRootCertificate: true, machineTrustRootCertificate: true, trustRootCertificateAsAdmin: true) { ForwardToUpstreamGateway = true };
@@ -51,7 +54,15 @@ public class ProxyProvider
         {
             LogBase.Warn("Could not find rootCert.pfx, generate a certificate and restart the server.");
         }
-        proxyServer.CertificateManager.CertificateEngine = CertificateEngine.DefaultWindows;
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            proxyServer.CertificateManager.CertificateEngine = CertificateEngine.DefaultWindows;
+        }
+        else
+        {
+            proxyServer.CertificateManager.CertificateEngine = CertificateEngine.BouncyCastle;
+        }
 
         if (this.admin)
         {
@@ -73,7 +84,7 @@ public class ProxyProvider
         explicitProxyEndPoint.BeforeTunnelConnectRequest += OnBeforeTunnelConnectRequest;
         proxyServer.AddEndPoint(explicitProxyEndPoint);
         proxyServer.Start();
-        proxyServer.SetAsSystemProxy(explicitProxyEndPoint, ProxyProtocolType.AllHttp, LocalHostAddr.IP);
+        proxyServer.SetAsSystemProxy(explicitProxyEndPoint, ProxyProtocolType.AllHttp, localHostAddr);
     }
 
     public void Stop()
