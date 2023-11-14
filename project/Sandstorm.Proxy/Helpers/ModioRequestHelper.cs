@@ -8,6 +8,7 @@ using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
+using Sandstorm.Proxy.Models;
 
 namespace Sandstorm.Proxy.Helpers;
 
