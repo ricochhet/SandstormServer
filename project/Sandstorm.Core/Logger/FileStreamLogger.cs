@@ -1,4 +1,4 @@
-﻿using Sandstorm.Core.Configuration.Enums;
+﻿using Sandstorm.Core.Logger.Enums;
 using Sandstorm.Core.Configuration.Helpers;
 using System;
 using System.IO;

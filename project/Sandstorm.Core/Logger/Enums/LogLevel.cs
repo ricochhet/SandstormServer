@@ -1,4 +1,4 @@
-﻿namespace Sandstorm.Core.Configuration.Enums;
+﻿namespace Sandstorm.Core.Logger.Enums;
 
 public enum LogLevel
 {
