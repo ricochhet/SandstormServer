@@ -35,6 +35,11 @@ public static class ConfigurationHelper
         get { return Path.Combine(SandstormDataPath, LogFileName); }
     }
 
+    public static string ModioApiKeyDefault
+    {
+        get { return "PLACE_API_KEY_HERE"; }
+    }
+
     public static void CheckFirstRun()
     {
         if (!FsProvider.Exists(ConfigFilePath))
@@ -44,7 +49,7 @@ public static class ConfigurationHelper
                 new()
                 {
                     ModioGameId = -1,
-                    ModioApiKey = "PLACE_API_KEY_HERE",
+                    ModioApiKey = ModioApiKeyDefault,
                     ModioApiUrlBase = "https://api.mod.io",
                     AddToSubscription = new List<string>(),
                     DoNotAddToSubscription = new List<string>()

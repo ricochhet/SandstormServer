@@ -60,7 +60,7 @@ internal class Program
             return;
         }
 
-        if (configuration.ModioApiKey == "PLACE_API_KEY_HERE" || string.IsNullOrEmpty(configuration.ModioApiKey))
+        if (configuration.ModioApiKey == ConfigurationHelper.ModioApiKeyDefault || string.IsNullOrEmpty(configuration.ModioApiKey))
         {
             LogBase.Warn($"The mod.io API key has not been set in \"{ConfigurationHelper.ConfigFileName}\".");
             CommandLineHelper.Pause();
