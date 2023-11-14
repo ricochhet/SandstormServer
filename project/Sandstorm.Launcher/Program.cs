@@ -9,7 +9,7 @@ using Sandstorm.Proxy.Helpers;
 using Sandstorm.Proxy.Providers;
 using System.Threading.Tasks;
 
-namespace Sandstorm;
+namespace Sandstorm.Launcher;
 
 internal class Program
 {
@@ -70,7 +70,7 @@ internal class Program
         try
         {
             await ModioRequestHelper.SubscribeAsync(configuration);
-            string subscriptionFilePath = Path.Combine(ConfigurationHelper.ConfigFilePath, configuration.ModioGameId.ToString(), "Subscription.json");
+            string subscriptionFilePath = Path.Combine(ConfigurationHelper.SandstormDataPath, configuration.ModioGameId.ToString(), "Subscription.json");
             if (!FsProvider.Exists(subscriptionFilePath))
             {
                 LogBase.Error($"Could not find the mod subscription data at: {subscriptionFilePath}");

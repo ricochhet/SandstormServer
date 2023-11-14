@@ -7,7 +7,7 @@ $projectPath = "project"
 
 Set-Location -Path $projectPath
 
-if ($build -eq "proxy") {
+if ($build -eq "launcher") {
     $projectName = "Sandstorm.${build}"
 
     if ($config -eq "Release" -or $config -eq "Debug") {
