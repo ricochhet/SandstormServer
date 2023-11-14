@@ -19,14 +19,14 @@ public class ProxyProvider
 
     private ExplicitProxyEndPoint explicitProxyEndPoint;
 
-    private readonly int specifiedGameId;
-    private readonly string modioModObject;
+    private readonly int id;
+    private readonly string response;
     private readonly bool admin;
 
-    public ProxyProvider(int specifiedGameId, string modioModObject, bool admin = false)
+    public ProxyProvider(int id, string response, bool admin = false)
     {
-        this.specifiedGameId = specifiedGameId;
-        this.modioModObject = modioModObject;
+        this.id = id;
+        this.response = response;
         this.admin = admin;
         if (this.admin)
         {
@@ -93,56 +93,12 @@ public class ProxyProvider
 
     private Task OnRequest(object sender, SessionEventArgs e)
     {
-        string path = e.HttpClient.Request.RequestUri.AbsolutePath;
-        string host = e.HttpClient.Request.RequestUri.Host;
-        e.HttpClient.Response.ContentType = "application/json";
-
-        if (host.Contains("api.mod.io"))
-        {
-            if (path.Contains("/v1/me/subscribed") || path.Contains($"/v1/games/{specifiedGameId}/mods"))
-            {
-                ModioResponseHelper.Response(modioModObject, e);
-            }
-            else if (path.Contains("/v1/me"))
-            {
-                ModioResponseHelper.Response(ModioResponseHelper.User, e);
-            }
-            else if (path.Contains("/v1/authenticate/terms"))
-            {
-                ModioResponseHelper.Response(ModioResponseHelper.Terms, e);
-            }
-            else if (path.Contains("/v1/external/steamauth"))
-            {
-                ModioResponseHelper.Response(ModioResponseHelper.Steam, e);
-            }
-            else
-            {
-                ModioResponseHelper.Response(ModioResponseHelper.NotFound, e);
-                LogBase.Warn($"Found: {host + path}, but it has no handle.");
-            }
-        }
-        else if (host.Contains("mod.io"))
-        {
-            switch (path)
-            {
-                default:
-                    ModioResponseHelper.Response(ModioResponseHelper.NotFound, e);
-                    break;
-            }
-        }
-
-        return Task.CompletedTask;
+        return ModioProxyService.OnRequest(e, response, id);
     }
 
     private Task OnBeforeTunnelConnectRequest(object sender, TunnelConnectSessionEventArgs e)
     {
-        string host = e.HttpClient.Request.RequestUri.Host;
-        if (!host.Contains("mod.io"))
-        {
-            e.DecryptSsl = false;
-        }
-
-        return Task.CompletedTask;
+        return ModioProxyService.OnBeforeTunnelConnectRequest(e);
     }
 
     private static int GetFreeTCPPort()
