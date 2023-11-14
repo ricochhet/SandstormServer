@@ -15,7 +15,7 @@ public static class ConfigurationHelper
         get { return "./SandstormServer_Data"; }
     }
 
-    private static string ConfigFileName
+    public static string ConfigFileName
     {
         get { return "SandstormServer.json"; }
     }

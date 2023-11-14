@@ -26,7 +26,7 @@ internal class Program
         ConfigurationModel configuration = ConfigurationHelper.Read();
         if (configuration == null)
         {
-            LogBase.Error("SandstormServer.json could not be read, make sure it is located in \"SandstormServer_Data\" and try again.");
+            LogBase.Error($"{ConfigurationHelper.ConfigFileName} could not be read, make sure it is located in \"SandstormServer_Data\" and try again.");
             CommandLineHelper.Pause();
             return;
         }
@@ -48,21 +48,21 @@ internal class Program
 
         if (configuration.ModioGameId == -1)
         {
-            LogBase.Warn("The game id has not been set in \"SandstormServer.json\".");
+            LogBase.Warn($"The game id has not been set in \"{ConfigurationHelper.ConfigFileName}\".");
             CommandLineHelper.Pause();
             return;
         }
 
         if (configuration.AddToSubscription.Count == 0)
         {
-            LogBase.Warn("The mod subscriptions have not been set in \"SandstormServer.json\".");
+            LogBase.Warn($"The mod subscriptions have not been set in \"{ConfigurationHelper.ConfigFileName}\".");
             CommandLineHelper.Pause();
             return;
         }
 
         if (configuration.ModioApiKey == "PLACE_API_KEY_HERE" || string.IsNullOrEmpty(configuration.ModioApiKey))
         {
-            LogBase.Warn("The mod.io API key has not been set in \"SandstormServer.json\".");
+            LogBase.Warn($"The mod.io API key has not been set in \"{ConfigurationHelper.ConfigFileName}\".");
             CommandLineHelper.Pause();
             return;
         }
