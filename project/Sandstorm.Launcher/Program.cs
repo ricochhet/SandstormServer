@@ -9,14 +9,12 @@ using Sandstorm.Proxy.Helpers;
 using System.Threading.Tasks;
 using Sandstorm.Core.Proxy.Providers;
 using Sandstorm.Core.Proxy.Helpers;
-using System.Collections.Generic;
 
 namespace Sandstorm.Launcher;
 
 internal class Program
 {
     private static ProxyProvider proxy;
-    private static string ProcessFileName = null;
 
     private static async Task Main(string[] args)
     {
@@ -34,12 +32,14 @@ internal class Program
             return;
         }
 
+
+        string processFileName = null;
         if (args.Length != 0)
         {
             CommandLineHelper.ProcessArgument(args, "--gameid", (int value) => configuration.ModioGameId = value);
             CommandLineHelper.ProcessArgument(args, "--subscribe", async (int value) => await ModioRequestHelper.AddAsync(configuration, value));
             CommandLineHelper.ProcessArgument(args, "--build", () => ModioRequestHelper.WriteSubscription(configuration));
-            CommandLineHelper.ProcessArgument(args, "--launch", (string value) => ProcessFileName = value);
+            CommandLineHelper.ProcessArgument(args, "--launch", (string value) => processFileName = value);
         }
 
         if (configuration.ModioGameId == -1)
@@ -117,10 +117,10 @@ internal class Program
         LogBase.Info("Press \"F\" to safely close the server.");
         LogBase.Info("==============================");
 
-        if (!string.IsNullOrEmpty(ProcessFileName))
+        if (!string.IsNullOrEmpty(processFileName))
         {
-            LogBase.Info($"Attempting to start process: {ProcessFileName}");
-            ProcessHelper.RunProcess(ProcessFileName);
+            LogBase.Info($"Attempting to start process: {processFileName}");
+            ProcessHelper.RunProcess(processFileName);
         }
 
         if (Console.ReadKey(intercept: true).Key == ConsoleKey.F)

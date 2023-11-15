@@ -59,13 +59,15 @@ The API requires a valid API key to use. Go to [https://mod.io/me/access](https:
 
 *Sandstorm.Proxy does not assist in downloading and installing mods. To download and install mods, you must do so directly through [mod.io](https://mod.io/g).
 
-- Usage: `SandstormProxy <args>`
+- Usage: `Sandstorm.Launcher.exe <args>`
     - `--gameid <int>`
         - Specify the game id. This will override the game id specified in your configuration file.
     - `--subscribe <int>`
         - Manually subscribe to a mod. This function uses the [Get Mod](https://docs.mod.io/#get-mod) request to fetch a JSON [mod object](https://docs.mod.io/#mod-object). Upon a successful request, the mod object will be written to a local JSON file (`./SandstormServer_Data/{gameId}/Mods/*.json`).
     - `--build`
         - The `build` function will grab all mod object JSONs and combine them into an array of mod objects (`./SandstormServer_Data/{gameId}/Subscription.json`).
+    - `--launch <path>`
+        - Launch a program after the proxy has started. Typically a game.
 
 ## Titanium.Web.Proxy
 The included version of Titanium.Web.Proxy has a few differences from the `develop` branch and NuGet.
