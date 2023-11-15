@@ -9,7 +9,7 @@ public static class ModioResponseHelper
     {
         e.Ok(response);
         e.HttpClient.Response.ContentType = "application/json";
-        LogBase.Info($"SUCCESS (mod.io): URL: {e.HttpClient.Request.RequestUri.Host + e.HttpClient.Request.RequestUri.AbsolutePath} | Content-Length: {response.Length}");
+        LogBase.Info($"SUCCESS: {e.HttpClient.Request.RequestUri.Host + e.HttpClient.Request.RequestUri.AbsolutePath} | Content-Length: {response.Length}");
     }
 
     public static string NotFound
