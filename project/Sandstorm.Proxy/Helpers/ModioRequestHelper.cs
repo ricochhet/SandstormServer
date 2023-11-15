@@ -81,7 +81,7 @@ public static class ModioRequestHelper
     public static void WriteSubscription(ConfigurationModel configuration)
     {
         string sandstormDataPath = Path.Combine(ConfigurationHelper.SandstormDataPath, configuration.ModioGameId.ToString());
-        List<string> modioDataFiles = FsProvider.GetFiles(sandstormDataPath + "Mods/", "*.json");
+        List<string> modioDataFiles = FsProvider.GetFiles(Path.Combine(sandstormDataPath, "Mods"), "*.json");
         List<object> modioModObjects = new();
         foreach (string data in modioDataFiles)
         {
