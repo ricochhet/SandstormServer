@@ -8,6 +8,7 @@ using Sandstorm.Core.Helpers;
 using Sandstorm.Proxy.Helpers;
 using Sandstorm.Proxy.Providers;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Sandstorm.Launcher;
 
@@ -34,21 +35,10 @@ internal class Program
 
         if (args.Length != 0)
         {
-            int manualGameId = Array.IndexOf(args, "--gameid");
-            if (manualGameId != -1)
-                configuration.ModioGameId = int.Parse(args[manualGameId + 1]);
-
-            int manualSubscribe = Array.IndexOf(args, "--subscribe");
-            if (manualSubscribe != -1)
-                await ModioRequestHelper.AddAsync(configuration, int.Parse(args[manualSubscribe + 1]));
-
-            int manualBuild = Array.IndexOf(args, "--build");
-            if (manualBuild != -1)
-                ModioRequestHelper.BuildModSubscription(configuration);
-
-            int manualLaunch = Array.IndexOf(args, "--launch");
-            if (manualLaunch != -1)
-                ProcessFileName = args[manualLaunch + 1];
+            CommandLineHelper.ProcessArgument(args, "--gameid", (int value) => configuration.ModioGameId = value);
+            CommandLineHelper.ProcessArgument(args, "--subscribe", async (int value) => await ModioRequestHelper.AddAsync(configuration, value));     
+            CommandLineHelper.ProcessArgument(args, "--build", () => ModioRequestHelper.BuildModSubscription(configuration));
+            CommandLineHelper.ProcessArgument(args, "--launch", (string value) => ProcessFileName = value);
         }
 
         if (configuration.ModioGameId == -1)
@@ -83,7 +73,7 @@ internal class Program
                 return;
             }
 
-            string modioModObject;
+            string responseObject;
             try
             {
                 string fileData = FsProvider.ReadAllText(subscriptionFilePath);
@@ -93,18 +83,18 @@ internal class Program
                     CommandLineHelper.Pause();
                     return;
                 }
-                modioModObject = fileData;
+                responseObject = fileData;
             }
             catch (IOException e)
             {
                 LogBase.Error($"An error occurred while reading the mod subscription data: {e.Message}");
-                modioModObject = string.Empty;
+                responseObject = string.Empty;
             }
 
-            if (string.IsNullOrEmpty(modioModObject))
+            if (string.IsNullOrEmpty(responseObject))
                 return;
 
-            proxy = new ProxyProvider(configuration.ModioGameId, modioModObject, WindowsAdminHelper.IsAdmin());
+            proxy = new ProxyProvider(configuration.ModioGameId, responseObject, WindowsAdminHelper.IsAdmin());
         }
         catch (Exception ex)
         {
