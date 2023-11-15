@@ -9,6 +9,7 @@ using Sandstorm.Proxy.Helpers;
 using System.Threading.Tasks;
 using Sandstorm.Core.Proxy.Providers;
 using Sandstorm.Core.Proxy.Helpers;
+using System.Collections.Generic;
 
 namespace Sandstorm.Launcher;
 
@@ -22,7 +23,7 @@ internal class Program
         Console.Title = "SandstormProxy";
         LogBase.Add(new NativeLogger());
         LogBase.Add(new FileStreamLogger());
-        LogBase.Info("Insurgency: Sandstorm Service Emulator");
+        Watermark.Draw(new() { "Insurgency: Sandstorm Service Emulator", "This work is free of charge", "If you paid money, you were scammed" });
 
         ConfigurationHelper.Write();
         ConfigurationModel configuration = ConfigurationHelper.Read();
