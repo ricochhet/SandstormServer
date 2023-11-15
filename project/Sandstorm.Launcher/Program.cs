@@ -18,7 +18,7 @@ internal class Program
 
     private static async Task Main(string[] args)
     {
-        Console.Title = "SandstormProxy";
+        Console.Title = "Sandstorm.Launcher";
         LogBase.Add(new NativeLogger());
         LogBase.Add(new FileStreamLogger());
         Watermark.Draw(new() { "Insurgency: Sandstorm Service Emulator", "This work is free of charge", "If you paid money, you were scammed" });
