@@ -9,12 +9,14 @@ using Sandstorm.Proxy.Helpers;
 using System.Threading.Tasks;
 using Sandstorm.Core.Proxy.Providers;
 using Sandstorm.Core.Proxy.Helpers;
+using Titanium.Web.Proxy.Models;
 
 namespace Sandstorm.Launcher;
 
 internal class Program
 {
     private static ProxyProvider proxy;
+    private static LocalHostAddr localHostAddr = LocalHostAddr.IP;
 
     private static async Task Main(string[] args)
     {
@@ -32,7 +34,6 @@ internal class Program
             return;
         }
 
-
         string processFileName = null;
         if (args.Length != 0)
         {
@@ -40,6 +41,15 @@ internal class Program
             CommandLineHelper.ProcessArgument(args, "--subscribe", async (int value) => await ModioRequestHelper.AddAsync(configuration, value));
             CommandLineHelper.ProcessArgument(args, "--build", () => ModioRequestHelper.WriteSubscription(configuration));
             CommandLineHelper.ProcessArgument(args, "--launch", (string value) => processFileName = value);
+            CommandLineHelper.ProcessArgument(
+                args,
+                "--host",
+                (string value) =>
+                {
+                    if (value == "localhost")
+                        localHostAddr = LocalHostAddr.LocalHost;
+                }
+            );
         }
 
         if (configuration.ModioGameId == -1)
@@ -95,7 +105,7 @@ internal class Program
             if (string.IsNullOrEmpty(responseObject))
                 return;
 
-            proxy = new ProxyProvider(configuration.ModioGameId, responseObject, WindowsAdminHelper.IsAdmin());
+            proxy = new ProxyProvider(configuration.ModioGameId, responseObject, WindowsAdminHelper.IsAdmin(), localHostAddr);
         }
         catch (Exception ex)
         {
