@@ -14,4 +14,10 @@ public static class JsonHelper
     {
         FsProvider.WriteFile(folderPath, fileName, JsonSerializer.Serialize(data, options));
     }
+
+    public static void Write(string folderPath, string fileName, string data, JsonSerializerOptions options = null)
+    {
+        object deserialized = JsonSerializer.Deserialize<object>(data);
+        FsProvider.WriteFile(folderPath, fileName, JsonSerializer.Serialize(deserialized, options));
+    }
 }

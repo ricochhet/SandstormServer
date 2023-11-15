@@ -8,6 +8,7 @@ using Sandstorm.Core.Helpers;
 using Sandstorm.Proxy.Helpers;
 using Sandstorm.Proxy.Providers;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Sandstorm.Launcher;
 
@@ -39,7 +40,7 @@ internal class Program
             CommandLineHelper.ProcessArgument(args, "--build", () => ModioRequestHelper.WriteSubscription(configuration));
             CommandLineHelper.ProcessArgument(args, "--launch", (string value) => ProcessFileName = value);
         }
-
+        
         if (configuration.ModioGameId == -1)
         {
             LogBase.Warn($"The game id has not been set in \"{ConfigurationHelper.ConfigFileName}\".");
