@@ -24,7 +24,7 @@ The primary way to build is using [Cake](https://cakebuild.net/).
 2. Run `dotnet-cake build.cake` (from `/project/` root).
 3. Output will be located in `project/Build/*`.
 
-Files placed in `{root}/bin/SandstormServer_Data` will be copied over to `project/Build`.
+Files placed in `{root}/bin/SandstormServer` will be copied over to `project/Build`.
 
 ### Developers
 If you intend to publish a build, use the above guide.
@@ -77,10 +77,6 @@ I have added a parameter to `SetAsSystemProxy()` to include the option to specif
 
 ### Suggestions & PRs
 Suggestions and pull requests are very appreciated, just keep in mind to follow the project architecture to keep it consistent.
-
-### TODO
-- Possibly allow users to automatically open the game process after the proxy server has started.
-    - Additionally have the proxy server close when the game closes.
 
 ### License
 See LICENSE file.
