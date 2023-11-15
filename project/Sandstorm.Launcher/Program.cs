@@ -24,7 +24,7 @@ internal class Program
         LogBase.Add(new FileStreamLogger());
         LogBase.Info("Insurgency: Sandstorm Service Emulator");
 
-        ConfigurationHelper.CheckFirstRun();
+        ConfigurationHelper.Write();
         ConfigurationModel configuration = ConfigurationHelper.Read();
         if (configuration == null)
         {

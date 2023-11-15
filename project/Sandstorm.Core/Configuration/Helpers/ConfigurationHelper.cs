@@ -40,7 +40,7 @@ public static class ConfigurationHelper
         get { return "PLACE_API_KEY_HERE"; }
     }
 
-    public static void CheckFirstRun()
+    public static void Write()
     {
         if (!FsProvider.Exists(ConfigFilePath))
         {
