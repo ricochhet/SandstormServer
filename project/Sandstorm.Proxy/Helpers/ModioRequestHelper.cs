@@ -67,7 +67,7 @@ public static class ModioRequestHelper
         string folderPath = Path.Combine(ConfigurationHelper.SandstormDataPath, configuration.ModioGameId.ToString(), "Mods");
         JsonSerializerOptions options = new() { WriteIndented = true };
         JsonHelper.Write(folderPath, $"{modId}.json", response, options);
-        LogBase.Info($"Saving mod: {modId}");
+        LogBase.Info($"Saved mod data to: {folderPath}/{modId}.json");
     }
 
     private static bool IsConfigurationInvalid(ConfigurationModel configuration)
