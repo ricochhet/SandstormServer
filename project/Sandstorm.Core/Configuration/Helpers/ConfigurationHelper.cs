@@ -40,6 +40,11 @@ public static class ConfigurationHelper
         get { return "PLACE_API_KEY_HERE"; }
     }
 
+    private static string ModioApiUrlBaseDefault
+    {
+        get { return "https://api.mod.io"; }
+    }
+
     public static void Write()
     {
         if (!FsProvider.Exists(ConfigFilePath))
@@ -50,7 +55,7 @@ public static class ConfigurationHelper
                 {
                     ModioGameId = -1,
                     ModioApiKey = ModioApiKeyDefault,
-                    ModioApiUrlBase = "https://api.mod.io",
+                    ModioApiUrlBase = ModioApiUrlBaseDefault,
                     AddToSubscription = new List<string>(),
                     DoNotAddToSubscription = new List<string>()
                 };

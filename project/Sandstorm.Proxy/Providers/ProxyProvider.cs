@@ -17,7 +17,6 @@ namespace Sandstorm.Proxy.Providers;
 public class ProxyProvider
 {
     private readonly ProxyServer proxyServer;
-
     private ExplicitProxyEndPoint explicitProxyEndPoint;
 
     private readonly int id;

@@ -36,7 +36,7 @@ internal class Program
         {
             CommandLineHelper.ProcessArgument(args, "--gameid", (int value) => configuration.ModioGameId = value);
             CommandLineHelper.ProcessArgument(args, "--subscribe", async (int value) => await ModioRequestHelper.AddAsync(configuration, value));
-            CommandLineHelper.ProcessArgument(args, "--build", () => ModioRequestHelper.BuildModSubscription(configuration));
+            CommandLineHelper.ProcessArgument(args, "--build", () => ModioRequestHelper.WriteSubscription(configuration));
             CommandLineHelper.ProcessArgument(args, "--launch", (string value) => ProcessFileName = value);
         }
 
