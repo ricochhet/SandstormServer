@@ -7,12 +7,12 @@ using Titanium.Web.Proxy.Models;
 using Titanium.Web.Proxy.Network;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
-using Sandstorm.Proxy.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
 using System.Runtime.InteropServices;
+using Sandstorm.Core.Proxy.Helpers;
 
-namespace Sandstorm.Proxy.Providers;
+namespace Sandstorm.Core.Proxy.Providers;
 
 public class ProxyProvider
 {

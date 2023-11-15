@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Sandstorm.Core.Logger;
 using Titanium.Web.Proxy.EventArguments;
 
-namespace Sandstorm.Proxy.Helpers;
+namespace Sandstorm.Core.Proxy.Helpers;
 
 public static class ModioProxyService
 {

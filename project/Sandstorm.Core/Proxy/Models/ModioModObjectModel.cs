@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Sandstorm.Proxy.Models;
+namespace Sandstorm.Core.Proxy.Models;
 
 public class ModioModObjectModel
 {

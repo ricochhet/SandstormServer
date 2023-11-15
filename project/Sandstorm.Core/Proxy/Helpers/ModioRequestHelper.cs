@@ -8,9 +8,9 @@ using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
-using Sandstorm.Proxy.Models;
+using Sandstorm.Core.Proxy.Models;
 
-namespace Sandstorm.Proxy.Helpers;
+namespace Sandstorm.Core.Proxy.Helpers;
 
 public static class ModioRequestHelper
 {
