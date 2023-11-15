@@ -10,14 +10,11 @@ public static class ProcessHelper
     {
         try
         {
-            Process process = new()
-            {
-                StartInfo = new ProcessStartInfo
+            Process process =
+                new()
                 {
-                    FileName = fileName,
-                    UseShellExecute = true
-                },
-            };
+                    StartInfo = new ProcessStartInfo { FileName = fileName, UseShellExecute = true },
+                };
 
             process.Start();
         }
