@@ -8,7 +8,6 @@ using Sandstorm.Core.Helpers;
 using Sandstorm.Proxy.Helpers;
 using Sandstorm.Proxy.Providers;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace Sandstorm.Launcher;
 
