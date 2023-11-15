@@ -45,6 +45,11 @@ public static class ConfigurationHelper
         get { return "https://api.mod.io"; }
     }
 
+    public static string ModioModObjectFileName
+    {
+        get { return "Subscription.json"; }
+    }
+
     public static void Write()
     {
         if (!FsProvider.Exists(ConfigFilePath))

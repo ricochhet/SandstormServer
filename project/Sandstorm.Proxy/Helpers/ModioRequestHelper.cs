@@ -102,6 +102,6 @@ public static class ModioRequestHelper
             };
 
         JsonSerializerOptions options = new() { WriteIndented = true };
-        JsonHelper.Write(sandstormDataPath, "Subscription.json", modioModObject, options);
+        JsonHelper.Write(sandstormDataPath, ConfigurationHelper.ModioModObjectFileName, modioModObject, options);
     }
 }
