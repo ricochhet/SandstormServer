@@ -7,7 +7,7 @@
     <ItemGroup>
         <ProjectReference Include="..\ThirdParty\Titanium.Web.Proxy\Titanium.Web.Proxy.csproj" />
         <ProjectReference Include="..\Sandstorm.Core\Sandstorm.Core.csproj" />
-        <ProjectReference Include="..\Sandstorm.Core\Sandstorm.Proxy.csproj" />
+        <ProjectReference Include="..\Sandstorm.Core\Sandstorm.Launcher.csproj" />
     </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
 		<Exec Command="dotnet cake &quot;../build.cake&quot; --config=&quot;$(ConfigurationName)&quot; --vsbuilt=true" />
