@@ -14,6 +14,7 @@ namespace Sandstorm.Launcher;
 internal class Program
 {
     private static ProxyProvider proxy;
+    private static string ProcessFileName = null;
 
     private static async Task Main(string[] args)
     {
@@ -44,6 +45,10 @@ internal class Program
             int manualBuild = Array.IndexOf(args, "--build");
             if (manualBuild != -1)
                 ModioRequestHelper.BuildModSubscription(configuration);
+
+            int manualLaunch = Array.IndexOf(args, "--launch");
+            if (manualLaunch != -1)
+                ProcessFileName = args[manualLaunch + 1];
         }
 
         if (configuration.ModioGameId == -1)
@@ -120,6 +125,12 @@ internal class Program
         LogBase.Info("Intercepting connections... Now run Insurgency: Sandstorm!");
         LogBase.Info("Press \"F\" to safely close the server.");
         LogBase.Info("==============================");
+
+        if (!string.IsNullOrEmpty(ProcessFileName))
+        {
+            LogBase.Info($"Attempting to start process: {ProcessFileName}");
+            ProcessHelper.RunProcess(ProcessFileName);
+        }
 
         if (Console.ReadKey(intercept: true).Key == ConsoleKey.F)
         {
