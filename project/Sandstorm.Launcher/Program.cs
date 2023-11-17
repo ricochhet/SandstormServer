@@ -105,7 +105,7 @@ internal class Program
             if (string.IsNullOrEmpty(responseObject))
                 return;
 
-            proxy = new ProxyProvider(configuration.ModioGameId, responseObject, WindowsAdminHelper.IsAdmin(), localHostAddr);
+            proxy = new ProxyProvider(configuration.ModioGameId, responseObject, WindowsAdminHelper.IsAdmin(), localHostAddr, ConfigurationHelper.SandstormDataPath);
         }
         catch (Exception ex)
         {

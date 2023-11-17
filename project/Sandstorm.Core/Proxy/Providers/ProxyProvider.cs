@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -23,13 +24,23 @@ public class ProxyProvider
     private readonly string response;
     private readonly bool admin;
     private readonly LocalHostAddr localHostAddr = LocalHostAddr.IP;
+    private readonly string pfxFilePath;
+    private static string PfxName
+    {
+        get { return "rootCert.pfx"; }
+    }
 
-    public ProxyProvider(int id, string response, bool admin = false, LocalHostAddr localHostAddr = LocalHostAddr.IP)
+    public ProxyProvider(int id, string response, bool admin = false, LocalHostAddr localHostAddr = LocalHostAddr.IP, string pfxFilePath = "")
     {
         this.id = id;
         this.response = response;
         this.admin = admin;
         this.localHostAddr = localHostAddr;
+        if (!string.IsNullOrEmpty(pfxFilePath))
+        {
+            this.pfxFilePath = Path.Combine(pfxFilePath, PfxName);
+        }
+
         if (this.admin)
         {
             proxyServer = new ProxyServer(userTrustRootCertificate: true, machineTrustRootCertificate: true, trustRootCertificateAsAdmin: true) { ForwardToUpstreamGateway = true };
@@ -44,7 +55,7 @@ public class ProxyProvider
         };
         proxyServer.TcpTimeWaitSeconds = 10;
         proxyServer.ConnectionTimeOutSeconds = 15;
-        if (FsProvider.Exists("./rootCert.pfx"))
+        if (FsProvider.Exists(this.pfxFilePath))
         {
             LogBase.Info("Found rootCert.pfx");
             proxyServer.CertificateManager.RootCertificate = new X509Certificate2("./rootCert.pfx");
@@ -54,6 +65,7 @@ public class ProxyProvider
             LogBase.Warn("Could not find rootCert.pfx, generate a certificate and restart the server.");
         }
 
+        proxyServer.CertificateManager.PfxFilePath = this.pfxFilePath;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             proxyServer.CertificateManager.CertificateEngine = CertificateEngine.DefaultWindows;
