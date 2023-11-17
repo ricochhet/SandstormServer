@@ -58,7 +58,7 @@ public class ProxyProvider
         if (FsProvider.Exists(this.pfxFilePath))
         {
             LogBase.Info("Found rootCert.pfx");
-            proxyServer.CertificateManager.RootCertificate = new X509Certificate2("./rootCert.pfx");
+            proxyServer.CertificateManager.RootCertificate = new X509Certificate2(this.pfxFilePath);
         }
         else
         {
