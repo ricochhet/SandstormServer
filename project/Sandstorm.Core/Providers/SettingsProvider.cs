@@ -9,45 +9,18 @@ namespace Sandstorm.Core.Providers;
 
 public static class SettingsProvider
 {
-    public static string SandstormDataPath
-    {
-        get { return "./SandstormServer_Data"; }
-    }
-
-    public static string SettingsFileName
-    {
-        get { return "SandstormServer.json"; }
-    }
-
-    public static string SettingsFilePath
-    {
-        get { return Path.Combine(SandstormDataPath, SettingsFileName); }
-    }
-
-    private static string LogFileName
-    {
-        get { return "SandstormServer.log"; }
-    }
-
+    public const string SandstormDataPath = "./SandstormServer_Data";
+    public const string SettingsFileName = "SandstormServer.json";
+    public const string ModObjectFileName = "Subscription.json";
+    public const string ApiKeyDefault = "PLACE_API_KEY_HERE";
     public static string LogFilePath
     {
         get { return Path.Combine(SandstormDataPath, LogFileName); }
     }
 
-    public static string ApiKeyDefault
-    {
-        get { return "PLACE_API_KEY_HERE"; }
-    }
-
-    private static string ApiUrlBaseDefault
-    {
-        get { return "https://api.mod.io"; }
-    }
-
-    public static string ModObjectFileName
-    {
-        get { return "Subscription.json"; }
-    }
+    private const string LogFileName = "SandstormServer.log";
+    private static readonly string ApiUrlBaseDefault = "https://api.mod.io";
+    private static readonly string SettingsFilePath = Path.Combine(SandstormDataPath, SettingsFileName);
 
     public static void Write()
     {
