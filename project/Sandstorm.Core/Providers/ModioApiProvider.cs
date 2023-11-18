@@ -9,7 +9,7 @@ using Sandstorm.Core.Providers;
 
 namespace Sandstorm.Core.Helpers;
 
-public static class ModioApiHelper
+public static class ModioApiProvider
 {
     public static async Task SubscribeAsync(SettingsModel settings)
     {
