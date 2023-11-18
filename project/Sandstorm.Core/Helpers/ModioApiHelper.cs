@@ -69,7 +69,10 @@ public static class ModioApiHelper
 
     private static bool IsSettingsInvalid(SettingsModel settings)
     {
-        return settings.AddToSubscription.Count == 0 || settings.GameId == -1 || string.IsNullOrEmpty(SettingsProvider.SandstormDataPath) || string.IsNullOrEmpty(settings.ApiKey);
+        return settings.AddToSubscription.Count == 0
+            || settings.GameId == -1
+            || string.IsNullOrEmpty(SettingsProvider.SandstormDataPath)
+            || string.IsNullOrEmpty(settings.ApiKey);
     }
 
     public static void WriteSubscription(SettingsModel settings)

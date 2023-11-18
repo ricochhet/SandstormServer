@@ -27,7 +27,14 @@ public class ProxyService
     private readonly string pfxName = "rootCert.pfx";
     private readonly bool hasConnection;
 
-    public ProxyService(int id, string response, bool admin = false, LocalHostAddr localHostAddr = LocalHostAddr.IP, string pfxFilePath = "", bool hasConnection = true)
+    public ProxyService(
+        int id,
+        string response,
+        bool admin = false,
+        LocalHostAddr localHostAddr = LocalHostAddr.IP,
+        string pfxFilePath = "",
+        bool hasConnection = true
+    )
     {
         this.id = id;
         this.response = response;
@@ -41,7 +48,14 @@ public class ProxyService
 
         if (this.admin)
         {
-            proxyServer = new ProxyServer(userTrustRootCertificate: true, machineTrustRootCertificate: true, trustRootCertificateAsAdmin: true) { ForwardToUpstreamGateway = true };
+            proxyServer = new ProxyServer(
+                userTrustRootCertificate: true,
+                machineTrustRootCertificate: true,
+                trustRootCertificateAsAdmin: true
+            )
+            {
+                ForwardToUpstreamGateway = true
+            };
         }
         else
         {
@@ -76,7 +90,11 @@ public class ProxyService
         if (this.admin)
         {
             LogBase.Info("EnsureRootCertificate() as admin");
-            proxyServer.CertificateManager.EnsureRootCertificate(userTrustRootCertificate: true, machineTrustRootCertificate: true, trustRootCertificateAsAdmin: true);
+            proxyServer.CertificateManager.EnsureRootCertificate(
+                userTrustRootCertificate: true,
+                machineTrustRootCertificate: true,
+                trustRootCertificateAsAdmin: true
+            );
         }
         else
         {

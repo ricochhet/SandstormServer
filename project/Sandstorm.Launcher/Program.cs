@@ -22,13 +22,22 @@ internal class Program
         Console.Title = "Sandstorm.Launcher";
         LogBase.Add(new NativeLogger());
         LogBase.Add(new FileStreamLogger());
-        Watermark.Draw(new() { "Insurgency: Sandstorm Service Emulator", "This work is free of charge", "If you paid money, you were scammed" });
+        Watermark.Draw(
+            new()
+            {
+                "Insurgency: Sandstorm Service Emulator",
+                "This work is free of charge",
+                "If you paid money, you were scammed"
+            }
+        );
 
         SettingsProvider.Write();
         SettingsModel settings = SettingsProvider.Read();
         if (settings == null)
         {
-            LogBase.Error($"{SettingsProvider.SettingsFileName} could not be read, make sure it is located in \"SandstormServer_Data\" and try again.");
+            LogBase.Error(
+                $"{SettingsProvider.SettingsFileName} could not be read, make sure it is located in \"SandstormServer_Data\" and try again."
+            );
             CommandLineHelper.Pause();
             return;
         }
@@ -37,7 +46,11 @@ internal class Program
         if (args.Length != 0)
         {
             CommandLineHelper.ProcessArgument(args, "--gameid", (int value) => settings.GameId = value);
-            CommandLineHelper.ProcessArgument(args, "--subscribe", async (int value) => await ModioApiHelper.AddAsync(settings, value));
+            CommandLineHelper.ProcessArgument(
+                args,
+                "--subscribe",
+                async (int value) => await ModioApiHelper.AddAsync(settings, value)
+            );
             CommandLineHelper.ProcessArgument(args, "--build", () => ModioApiHelper.WriteSubscription(settings));
             CommandLineHelper.ProcessArgument(args, "--launch", (string value) => processFileName = value);
             CommandLineHelper.ProcessArgument(
@@ -76,7 +89,11 @@ internal class Program
         try
         {
             await ModioApiHelper.SubscribeAsync(settings);
-            string subscriptionFilePath = Path.Combine(SettingsProvider.SandstormDataPath, settings.GameId.ToString(), SettingsProvider.ModObjectFileName);
+            string subscriptionFilePath = Path.Combine(
+                SettingsProvider.SandstormDataPath,
+                settings.GameId.ToString(),
+                SettingsProvider.ModObjectFileName
+            );
             if (!FsProvider.Exists(subscriptionFilePath))
             {
                 LogBase.Error($"Could not find the mod subscription data at: {subscriptionFilePath}");
@@ -105,7 +122,14 @@ internal class Program
             if (string.IsNullOrEmpty(response))
                 return;
 
-            proxy = new ProxyService(settings.GameId, response, WindowsAdminHelper.IsAdmin(), localHostAddr, SettingsProvider.SandstormDataPath, hasConnection);
+            proxy = new ProxyService(
+                settings.GameId,
+                response,
+                WindowsAdminHelper.IsAdmin(),
+                localHostAddr,
+                SettingsProvider.SandstormDataPath,
+                hasConnection
+            );
         }
         catch (Exception ex)
         {
@@ -121,7 +145,9 @@ internal class Program
         }
 
         proxy.StartProxy();
-        LogBase.Warn("DO NOT MANUALLY CLOSE THIS WINDOW! If you do and your internet breaks clear your proxy settings and restart your computer.");
+        LogBase.Warn(
+            "DO NOT MANUALLY CLOSE THIS WINDOW! If you do and your internet breaks clear your proxy settings and restart your computer."
+        );
         LogBase.Info("==============================");
         LogBase.Info("Intercepting connections... Now run Insurgency: Sandstorm!");
         LogBase.Info("Press \"F\" to safely close the server.");
