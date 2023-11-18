@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace Sandstorm.Core.Proxy.Models;
+namespace Sandstorm.Core.Models;
 
-public class ModioModObjectModel
+public class ModObjectModel
 {
     [JsonPropertyName("data")]
     public object[] Data { get; set; }

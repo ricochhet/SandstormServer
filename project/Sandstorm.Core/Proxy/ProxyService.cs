@@ -7,15 +7,14 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
-using Sandstorm.Core.Proxy.Helpers;
 using Titanium.Web.Proxy;
 using Titanium.Web.Proxy.EventArguments;
 using Titanium.Web.Proxy.Models;
 using Titanium.Web.Proxy.Network;
 
-namespace Sandstorm.Core.Proxy.Providers;
+namespace Sandstorm.Core.Proxy;
 
-public class ProxyProvider
+public class ProxyService
 {
     private readonly ProxyServer proxyServer;
     private ExplicitProxyEndPoint explicitProxyEndPoint;
@@ -25,22 +24,19 @@ public class ProxyProvider
     private readonly bool admin;
     private readonly LocalHostAddr localHostAddr = LocalHostAddr.IP;
     private readonly string pfxFilePath;
-    private static string PfxName
-    {
-        get { return "rootCert.pfx"; }
-    }
-    private readonly bool hasNetworkConnection;
+    private readonly string pfxName = "rootCert.pfx";
+    private readonly bool hasConnection;
 
-    public ProxyProvider(int id, string response, bool admin = false, LocalHostAddr localHostAddr = LocalHostAddr.IP, string pfxFilePath = "", bool hasNetworkConnection = true)
+    public ProxyService(int id, string response, bool admin = false, LocalHostAddr localHostAddr = LocalHostAddr.IP, string pfxFilePath = "", bool hasConnection = true)
     {
         this.id = id;
         this.response = response;
         this.admin = admin;
         this.localHostAddr = localHostAddr;
-        this.hasNetworkConnection = hasNetworkConnection;
+        this.hasConnection = hasConnection;
         if (!string.IsNullOrEmpty(pfxFilePath))
         {
-            this.pfxFilePath = Path.Combine(pfxFilePath, PfxName);
+            this.pfxFilePath = Path.Combine(pfxFilePath, pfxName);
         }
 
         if (this.admin)
@@ -117,12 +113,12 @@ public class ProxyProvider
 
     private Task OnRequest(object sender, SessionEventArgs e)
     {
-        return ModioProxyService.OnRequest(e, response, id, hasNetworkConnection);
+        return ProxyEvents.OnRequest(e, id, response, hasConnection);
     }
 
     private Task OnBeforeTunnelConnectRequest(object sender, TunnelConnectSessionEventArgs e)
     {
-        return ModioProxyService.OnBeforeTunnelConnectRequest(e, hasNetworkConnection);
+        return ProxyEvents.OnBeforeTunnelConnectRequest(e, hasConnection);
     }
 
     private static int GetFreeTCPPort()

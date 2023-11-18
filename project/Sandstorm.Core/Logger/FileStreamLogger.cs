@@ -3,15 +3,22 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Sandstorm.Core.Configuration.Helpers;
-using Sandstorm.Core.Logger.Enums;
+using Sandstorm.Core.Providers;
 
 namespace Sandstorm.Core.Logger;
 
 public class FileStreamLogger : ILogger, IDisposable
 {
+    private enum LogLevel
+    {
+        Debug,
+        Info,
+        Warn,
+        Error
+    }
+
     private static readonly SemaphoreSlim Semaphore = new(1);
-    private static readonly FileStream Stream = File.OpenWrite(ConfigurationHelper.LogFilePath);
+    private static readonly FileStream Stream = File.OpenWrite(SettingsProvider.LogFilePath);
 
     public Task Debug(string message) => WriteToBuffer(LogLevel.Debug, message);
 

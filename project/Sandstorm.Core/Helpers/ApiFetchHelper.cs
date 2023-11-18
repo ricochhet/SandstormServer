@@ -4,7 +4,7 @@ using Sandstorm.Core.Logger;
 
 namespace Sandstorm.Core.Providers;
 
-public class HttpProvider
+public class ApiFetchHelper
 {
     public static async Task<string> Get(string apiUrl, bool shouldInfoLog = false)
     {

@@ -1,23 +1,21 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Sandstorm.Core.Configuration.Helpers;
-using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Providers;
-using Sandstorm.Core.Proxy.Helpers;
-using Sandstorm.Core.Proxy.Providers;
+using Sandstorm.Core.Proxy;
 using Sandstorm.Proxy.Helpers;
 using Titanium.Web.Proxy.Models;
+using Sandstorm.Core.Models;
 
 namespace Sandstorm.Launcher;
 
 internal class Program
 {
-    private static ProxyProvider proxy;
+    private static ProxyService proxy;
     private static LocalHostAddr localHostAddr = LocalHostAddr.IP;
-    private static bool hasNetworkConnection = true;
+    private static bool hasConnection = true;
 
     private static async Task Main(string[] args)
     {
@@ -26,11 +24,11 @@ internal class Program
         LogBase.Add(new FileStreamLogger());
         Watermark.Draw(new() { "Insurgency: Sandstorm Service Emulator", "This work is free of charge", "If you paid money, you were scammed" });
 
-        ConfigurationHelper.Write();
-        ConfigurationModel configuration = ConfigurationHelper.Read();
-        if (configuration == null)
+        SettingsProvider.Write();
+        SettingsModel settings = SettingsProvider.Read();
+        if (settings == null)
         {
-            LogBase.Error($"{ConfigurationHelper.ConfigFileName} could not be read, make sure it is located in \"SandstormServer_Data\" and try again.");
+            LogBase.Error($"{SettingsProvider.SettingsFileName} could not be read, make sure it is located in \"SandstormServer_Data\" and try again.");
             CommandLineHelper.Pause();
             return;
         }
@@ -38,9 +36,9 @@ internal class Program
         string processFileName = null;
         if (args.Length != 0)
         {
-            CommandLineHelper.ProcessArgument(args, "--gameid", (int value) => configuration.ModioGameId = value);
-            CommandLineHelper.ProcessArgument(args, "--subscribe", async (int value) => await ModioRequestHelper.AddAsync(configuration, value));
-            CommandLineHelper.ProcessArgument(args, "--build", () => ModioRequestHelper.WriteSubscription(configuration));
+            CommandLineHelper.ProcessArgument(args, "--gameid", (int value) => settings.GameId = value);
+            CommandLineHelper.ProcessArgument(args, "--subscribe", async (int value) => await ModioApiHelper.AddAsync(settings, value));
+            CommandLineHelper.ProcessArgument(args, "--build", () => ModioApiHelper.WriteSubscription(settings));
             CommandLineHelper.ProcessArgument(args, "--launch", (string value) => processFileName = value);
             CommandLineHelper.ProcessArgument(
                 args,
@@ -51,34 +49,34 @@ internal class Program
                         localHostAddr = LocalHostAddr.LocalHost;
                 }
             );
-            CommandLineHelper.ProcessArgument(args, "--offline", () => hasNetworkConnection = false);
+            CommandLineHelper.ProcessArgument(args, "--offline", () => hasConnection = false);
         }
 
-        if (configuration.ModioGameId == -1)
+        if (settings.GameId == -1)
         {
-            LogBase.Warn($"The game id has not been set in \"{ConfigurationHelper.ConfigFileName}\".");
+            LogBase.Warn($"The game id has not been set in \"{SettingsProvider.SettingsFileName}\".");
             CommandLineHelper.Pause();
             return;
         }
 
-        if (configuration.AddToSubscription.Count == 0)
+        if (settings.AddToSubscription.Count == 0)
         {
-            LogBase.Warn($"The mod subscriptions have not been set in \"{ConfigurationHelper.ConfigFileName}\".");
+            LogBase.Warn($"The mod subscriptions have not been set in \"{SettingsProvider.SettingsFileName}\".");
             CommandLineHelper.Pause();
             return;
         }
 
-        if (configuration.ModioApiKey == ConfigurationHelper.ModioApiKeyDefault || string.IsNullOrEmpty(configuration.ModioApiKey))
+        if (settings.ApiKey == SettingsProvider.ApiKeyDefault || string.IsNullOrEmpty(settings.ApiKey))
         {
-            LogBase.Warn($"The mod.io API key has not been set in \"{ConfigurationHelper.ConfigFileName}\".");
+            LogBase.Warn($"The mod.io API key has not been set in \"{SettingsProvider.SettingsFileName}\".");
             CommandLineHelper.Pause();
             return;
         }
 
         try
         {
-            await ModioRequestHelper.SubscribeAsync(configuration);
-            string subscriptionFilePath = Path.Combine(ConfigurationHelper.SandstormDataPath, configuration.ModioGameId.ToString(), ConfigurationHelper.ModioModObjectFileName);
+            await ModioApiHelper.SubscribeAsync(settings);
+            string subscriptionFilePath = Path.Combine(SettingsProvider.SandstormDataPath, settings.GameId.ToString(), SettingsProvider.ModObjectFileName);
             if (!FsProvider.Exists(subscriptionFilePath))
             {
                 LogBase.Error($"Could not find the mod subscription data at: {subscriptionFilePath}");
@@ -86,7 +84,7 @@ internal class Program
                 return;
             }
 
-            string responseObject;
+            string response;
             try
             {
                 string fileData = FsProvider.ReadAllText(subscriptionFilePath);
@@ -96,25 +94,18 @@ internal class Program
                     CommandLineHelper.Pause();
                     return;
                 }
-                responseObject = fileData;
+                response = fileData;
             }
             catch (IOException e)
             {
                 LogBase.Error($"An error occurred while reading the mod subscription data: {e.Message}");
-                responseObject = string.Empty;
+                response = string.Empty;
             }
 
-            if (string.IsNullOrEmpty(responseObject))
+            if (string.IsNullOrEmpty(response))
                 return;
 
-            proxy = new ProxyProvider(
-                configuration.ModioGameId,
-                responseObject,
-                WindowsAdminHelper.IsAdmin(),
-                localHostAddr,
-                ConfigurationHelper.SandstormDataPath,
-                hasNetworkConnection
-            );
+            proxy = new ProxyService(settings.GameId, response, WindowsAdminHelper.IsAdmin(), localHostAddr, SettingsProvider.SandstormDataPath, hasConnection);
         }
         catch (Exception ex)
         {

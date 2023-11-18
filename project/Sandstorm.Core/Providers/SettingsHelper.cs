@@ -1,28 +1,27 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using Sandstorm.Core.Configuration.Models;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
-using Sandstorm.Core.Providers;
+using Sandstorm.Core.Models;
 
-namespace Sandstorm.Core.Configuration.Helpers;
+namespace Sandstorm.Core.Providers;
 
-public static class ConfigurationHelper
+public static class SettingsProvider
 {
     public static string SandstormDataPath
     {
         get { return "./SandstormServer_Data"; }
     }
 
-    public static string ConfigFileName
+    public static string SettingsFileName
     {
         get { return "SandstormServer.json"; }
     }
 
-    public static string ConfigFilePath
+    public static string SettingsFilePath
     {
-        get { return Path.Combine(SandstormDataPath, ConfigFileName); }
+        get { return Path.Combine(SandstormDataPath, SettingsFileName); }
     }
 
     private static string LogFileName
@@ -35,46 +34,46 @@ public static class ConfigurationHelper
         get { return Path.Combine(SandstormDataPath, LogFileName); }
     }
 
-    public static string ModioApiKeyDefault
+    public static string ApiKeyDefault
     {
         get { return "PLACE_API_KEY_HERE"; }
     }
 
-    private static string ModioApiUrlBaseDefault
+    private static string ApiUrlBaseDefault
     {
         get { return "https://api.mod.io"; }
     }
 
-    public static string ModioModObjectFileName
+    public static string ModObjectFileName
     {
         get { return "Subscription.json"; }
     }
 
     public static void Write()
     {
-        if (!FsProvider.Exists(ConfigFilePath))
+        if (!FsProvider.Exists(SettingsFilePath))
         {
-            LogBase.Info("Setup: Creating configuration file...");
-            ConfigurationModel configurationModel =
+            LogBase.Info("Setup: Creating settings file...");
+            SettingsModel settings =
                 new()
                 {
-                    ModioGameId = -1,
-                    ModioApiKey = ModioApiKeyDefault,
-                    ModioApiUrlBase = ModioApiUrlBaseDefault,
+                    GameId = -1,
+                    ApiKey = ApiKeyDefault,
+                    ApiUrlBase = ApiUrlBaseDefault,
                     AddToSubscription = new List<string>(),
                     DoNotAddToSubscription = new List<string>()
                 };
 
             JsonSerializerOptions options = new() { WriteIndented = true };
-            JsonHelper.Write(SandstormDataPath, ConfigFileName, configurationModel, options);
+            JsonHelper.Write(SandstormDataPath, SettingsFileName, settings, options);
         }
     }
 
-    public static ConfigurationModel Read()
+    public static SettingsModel Read()
     {
-        if (FsProvider.Exists(ConfigFilePath))
+        if (FsProvider.Exists(SettingsFilePath))
         {
-            ConfigurationModel inputJson = JsonHelper.Read<ConfigurationModel>(ConfigFilePath);
+            SettingsModel inputJson = JsonHelper.Read<SettingsModel>(SettingsFilePath);
             if (inputJson != null)
             {
                 return inputJson;
