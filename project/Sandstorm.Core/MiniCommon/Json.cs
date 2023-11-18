@@ -1,9 +1,8 @@
 using System.Text.Json;
-using Sandstorm.Core.Providers;
 
-namespace Sandstorm.Core.Helpers;
+namespace Sandstorm.Core.MiniCommon;
 
-public static class JsonHelper
+public static class Json
 {
     public static T Read<T>(string pathToFile)
     {

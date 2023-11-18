@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Sandstorm.Core.Logger;
+using Sandstorm.Core.MiniCommon;
 using Sandstorm.Core.Models;
-using Sandstorm.Core.Providers;
 
 namespace Sandstorm.Core.Helpers;
 
@@ -63,7 +63,7 @@ public static class ModioApiProvider
     {
         string folderPath = Path.Combine(SettingsProvider.SandstormDataPath, settings.GameId.ToString(), "Mods");
         JsonSerializerOptions options = new() { WriteIndented = true };
-        JsonHelper.Write(folderPath, $"{modId}.json", response, options);
+        Json.Write(folderPath, $"{modId}.json", response, options);
         LogBase.Info($"Saved mod data to: {folderPath}/{modId}.json");
     }
 
@@ -84,7 +84,7 @@ public static class ModioApiProvider
         {
             if (!settings.DoNotAddToSubscription.Contains(Path.GetFileNameWithoutExtension(data)))
             {
-                modObjects.Add(JsonHelper.Read<object>(data));
+                modObjects.Add(Json.Read<object>(data));
             }
         }
 
@@ -99,6 +99,6 @@ public static class ModioApiProvider
             };
 
         JsonSerializerOptions options = new() { WriteIndented = true };
-        JsonHelper.Write(sandstormDataPath, SettingsProvider.ModObjectFileName, modObject, options);
+        Json.Write(sandstormDataPath, SettingsProvider.ModObjectFileName, modObject, options);
     }
 }

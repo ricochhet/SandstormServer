@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Sandstorm.Core.Logger;
 
-namespace Sandstorm.Core.Providers;
+namespace Sandstorm.Core.MiniCommon;
 
 public class FsProvider
 {

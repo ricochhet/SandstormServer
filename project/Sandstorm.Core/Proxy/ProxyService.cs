@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Sandstorm.Core.Logger;
-using Sandstorm.Core.Providers;
+using Sandstorm.Core.MiniCommon;
 using Titanium.Web.Proxy;
 using Titanium.Web.Proxy.EventArguments;
 using Titanium.Web.Proxy.Models;

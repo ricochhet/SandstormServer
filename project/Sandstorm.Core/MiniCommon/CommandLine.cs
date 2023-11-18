@@ -1,9 +1,9 @@
 using System;
 using Sandstorm.Core.Logger;
 
-namespace Sandstorm.Core.Helpers;
+namespace Sandstorm.Core.MiniCommon;
 
-public static class CommandLineHelper
+public static class CommandLine
 {
     public static void ProcessArgument<T>(string[] args, string flag, Action<T> action)
     {

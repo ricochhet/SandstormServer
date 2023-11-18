@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Sandstorm.Core.Logger;
 
-namespace Sandstorm.Core.Providers;
+namespace Sandstorm.Core.MiniCommon;
 
 public class ApiFetchHelper
 {

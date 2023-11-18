@@ -3,11 +3,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
-using Sandstorm.Core.Providers;
 using Sandstorm.Core.Proxy;
 using Sandstorm.Proxy.Helpers;
 using Titanium.Web.Proxy.Models;
 using Sandstorm.Core.Models;
+using Sandstorm.Core.MiniCommon;
 
 namespace Sandstorm.Launcher;
 
@@ -38,22 +38,22 @@ internal class Program
             LogBase.Error(
                 $"{SettingsProvider.SettingsFileName} could not be read, make sure it is located in \"SandstormServer_Data\" and try again."
             );
-            CommandLineHelper.Pause();
+            CommandLine.Pause();
             return;
         }
 
         string processFileName = null;
         if (args.Length != 0)
         {
-            CommandLineHelper.ProcessArgument(args, "--gameid", (int value) => settings.GameId = value);
-            CommandLineHelper.ProcessArgument(
+            CommandLine.ProcessArgument(args, "--gameid", (int value) => settings.GameId = value);
+            CommandLine.ProcessArgument(
                 args,
                 "--subscribe",
                 async (int value) => await ModioApiProvider.Add(settings, value)
             );
-            CommandLineHelper.ProcessArgument(args, "--build", () => ModioApiProvider.Write(settings));
-            CommandLineHelper.ProcessArgument(args, "--launch", (string value) => processFileName = value);
-            CommandLineHelper.ProcessArgument(
+            CommandLine.ProcessArgument(args, "--build", () => ModioApiProvider.Write(settings));
+            CommandLine.ProcessArgument(args, "--launch", (string value) => processFileName = value);
+            CommandLine.ProcessArgument(
                 args,
                 "--host",
                 (string value) =>
@@ -62,27 +62,27 @@ internal class Program
                         localHostAddr = LocalHostAddr.LocalHost;
                 }
             );
-            CommandLineHelper.ProcessArgument(args, "--offline", () => hasConnection = false);
+            CommandLine.ProcessArgument(args, "--offline", () => hasConnection = false);
         }
 
         if (settings.GameId == -1)
         {
             LogBase.Warn($"The game id has not been set in \"{SettingsProvider.SettingsFileName}\".");
-            CommandLineHelper.Pause();
+            CommandLine.Pause();
             return;
         }
 
         if (settings.AddToSubscription.Count == 0)
         {
             LogBase.Warn($"The mod subscriptions have not been set in \"{SettingsProvider.SettingsFileName}\".");
-            CommandLineHelper.Pause();
+            CommandLine.Pause();
             return;
         }
 
         if (settings.ApiKey == SettingsProvider.ApiKeyDefault || string.IsNullOrEmpty(settings.ApiKey))
         {
             LogBase.Warn($"The mod.io API key has not been set in \"{SettingsProvider.SettingsFileName}\".");
-            CommandLineHelper.Pause();
+            CommandLine.Pause();
             return;
         }
 
@@ -97,7 +97,7 @@ internal class Program
             if (!FsProvider.Exists(subscriptionFilePath))
             {
                 LogBase.Error($"Could not find the mod subscription data at: {subscriptionFilePath}");
-                CommandLineHelper.Pause();
+                CommandLine.Pause();
                 return;
             }
 
@@ -108,7 +108,7 @@ internal class Program
                 if (string.IsNullOrEmpty(fileData))
                 {
                     LogBase.Error("The mod subscription data is either null or empty.");
-                    CommandLineHelper.Pause();
+                    CommandLine.Pause();
                     return;
                 }
                 response = fileData;
@@ -140,7 +140,7 @@ internal class Program
             LogBase.Error("==============================");
             LogBase.Error(ex.InnerException.Message);
             LogBase.Error(ex.InnerException.StackTrace);
-            CommandLineHelper.Pause();
+            CommandLine.Pause();
             return;
         }
 

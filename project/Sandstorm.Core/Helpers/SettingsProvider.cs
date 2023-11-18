@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using Sandstorm.Core.Helpers;
 using Sandstorm.Core.Logger;
 using Sandstorm.Core.Models;
+using Sandstorm.Core.MiniCommon;
 
-namespace Sandstorm.Core.Providers;
+namespace Sandstorm.Core.Helpers;
 
 public static class SettingsProvider
 {
@@ -38,7 +38,7 @@ public static class SettingsProvider
                 };
 
             JsonSerializerOptions options = new() { WriteIndented = true };
-            JsonHelper.Write(SandstormDataPath, SettingsFileName, settings, options);
+            Json.Write(SandstormDataPath, SettingsFileName, settings, options);
         }
     }
 
@@ -46,7 +46,7 @@ public static class SettingsProvider
     {
         if (FsProvider.Exists(SettingsFilePath))
         {
-            SettingsModel inputJson = JsonHelper.Read<SettingsModel>(SettingsFilePath);
+            SettingsModel inputJson = Json.Read<SettingsModel>(SettingsFilePath);
             if (inputJson != null)
             {
                 return inputJson;
