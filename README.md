@@ -70,6 +70,8 @@ The API requires a valid API key to use. Go to [https://mod.io/me/access](https:
         - The `build` function will grab all mod object JSONs and combine them into an array of mod objects (`./SandstormServer_Data/{gameId}/Subscription.json`).
     - `--launch <path>`
         - Launch a program after the proxy has started. Typically a game.
+    - `--offline`
+        - Run the proxy server in offline mode. Prevents throwing SocketExceptions when DNS resolution cannot be performed. This will make everything respond with a 502 (Bad Gateway).
 
 ## Titanium.Web.Proxy
 The included version of Titanium.Web.Proxy has a few differences from the `develop` branch and NuGet.
