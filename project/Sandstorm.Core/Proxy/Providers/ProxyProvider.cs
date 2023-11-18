@@ -29,13 +29,15 @@ public class ProxyProvider
     {
         get { return "rootCert.pfx"; }
     }
+    private readonly bool hasNetworkConnection;
 
-    public ProxyProvider(int id, string response, bool admin = false, LocalHostAddr localHostAddr = LocalHostAddr.IP, string pfxFilePath = "")
+    public ProxyProvider(int id, string response, bool admin = false, LocalHostAddr localHostAddr = LocalHostAddr.IP, string pfxFilePath = "", bool hasNetworkConnection = true)
     {
         this.id = id;
         this.response = response;
         this.admin = admin;
         this.localHostAddr = localHostAddr;
+        this.hasNetworkConnection = hasNetworkConnection;
         if (!string.IsNullOrEmpty(pfxFilePath))
         {
             this.pfxFilePath = Path.Combine(pfxFilePath, PfxName);
@@ -115,12 +117,12 @@ public class ProxyProvider
 
     private Task OnRequest(object sender, SessionEventArgs e)
     {
-        return ModioProxyService.OnRequest(e, response, id);
+        return ModioProxyService.OnRequest(e, response, id, hasNetworkConnection);
     }
 
     private Task OnBeforeTunnelConnectRequest(object sender, TunnelConnectSessionEventArgs e)
     {
-        return ModioProxyService.OnBeforeTunnelConnectRequest(e);
+        return ModioProxyService.OnBeforeTunnelConnectRequest(e, hasNetworkConnection);
     }
 
     private static int GetFreeTCPPort()

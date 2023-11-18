@@ -17,6 +17,7 @@ internal class Program
 {
     private static ProxyProvider proxy;
     private static LocalHostAddr localHostAddr = LocalHostAddr.IP;
+    private static bool hasNetworkConnection = true;
 
     private static async Task Main(string[] args)
     {
@@ -50,6 +51,7 @@ internal class Program
                         localHostAddr = LocalHostAddr.LocalHost;
                 }
             );
+            CommandLineHelper.ProcessArgument(args, "--offline", () => hasNetworkConnection = false);
         }
 
         if (configuration.ModioGameId == -1)
@@ -105,7 +107,14 @@ internal class Program
             if (string.IsNullOrEmpty(responseObject))
                 return;
 
-            proxy = new ProxyProvider(configuration.ModioGameId, responseObject, WindowsAdminHelper.IsAdmin(), localHostAddr, ConfigurationHelper.SandstormDataPath);
+            proxy = new ProxyProvider(
+                configuration.ModioGameId,
+                responseObject,
+                WindowsAdminHelper.IsAdmin(),
+                localHostAddr,
+                ConfigurationHelper.SandstormDataPath,
+                hasNetworkConnection
+            );
         }
         catch (Exception ex)
         {

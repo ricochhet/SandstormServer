@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using Sandstorm.Core.Logger;
 using Titanium.Web.Proxy.EventArguments;
@@ -6,7 +7,7 @@ namespace Sandstorm.Core.Proxy.Helpers;
 
 public static class ModioProxyService
 {
-    public static Task OnRequest(SessionEventArgs e, string response, int id)
+    public static Task OnRequest(SessionEventArgs e, string response, int id, bool hasNetworkConnection = true)
     {
         string path = e.HttpClient.Request.RequestUri.AbsolutePath;
         string host = e.HttpClient.Request.RequestUri.Host;
@@ -45,16 +46,27 @@ public static class ModioProxyService
                     break;
             }
         }
+        else if (!hasNetworkConnection)
+        {
+            e.GenericResponse("502 Bad Gateway", HttpStatusCode.BadGateway);
+        }
 
         return Task.CompletedTask;
     }
 
-    public static Task OnBeforeTunnelConnectRequest(TunnelConnectSessionEventArgs e)
+    public static Task OnBeforeTunnelConnectRequest(TunnelConnectSessionEventArgs e, bool hasNetworkConnection = true)
     {
-        string host = e.HttpClient.Request.RequestUri.Host;
-        if (!host.Contains("mod.io"))
+        if (hasNetworkConnection)
         {
-            e.DecryptSsl = false;
+            string host = e.HttpClient.Request.RequestUri.Host;
+            if (!host.Contains("mod.io"))
+            {
+                e.DecryptSsl = false;
+            }
+        }
+        else
+        {
+            e.DecryptSsl = true;
         }
 
         return Task.CompletedTask;
