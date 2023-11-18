@@ -49,9 +49,9 @@ internal class Program
             CommandLineHelper.ProcessArgument(
                 args,
                 "--subscribe",
-                async (int value) => await ModioApiProvider.AddAsync(settings, value)
+                async (int value) => await ModioApiProvider.Add(settings, value)
             );
-            CommandLineHelper.ProcessArgument(args, "--build", () => ModioApiProvider.WriteSubscription(settings));
+            CommandLineHelper.ProcessArgument(args, "--build", () => ModioApiProvider.Write(settings));
             CommandLineHelper.ProcessArgument(args, "--launch", (string value) => processFileName = value);
             CommandLineHelper.ProcessArgument(
                 args,
@@ -88,7 +88,7 @@ internal class Program
 
         try
         {
-            await ModioApiProvider.SubscribeAsync(settings);
+            await ModioApiProvider.Subscribe(settings);
             string subscriptionFilePath = Path.Combine(
                 SettingsProvider.SandstormDataPath,
                 settings.GameId.ToString(),

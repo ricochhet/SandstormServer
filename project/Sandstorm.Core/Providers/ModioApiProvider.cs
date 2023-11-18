@@ -11,7 +11,7 @@ namespace Sandstorm.Core.Helpers;
 
 public static class ModioApiProvider
 {
-    public static async Task SubscribeAsync(SettingsModel settings)
+    public static async Task Subscribe(SettingsModel settings)
     {
         if (IsSettingsInvalid(settings))
         {
@@ -28,7 +28,7 @@ public static class ModioApiProvider
             foreach (string modIdFile in modIdFiles)
             {
                 int modId = int.Parse(modIdFile);
-                string response = await RequestAsync(settings, modId);
+                string response = await Get(settings, modId);
                 if (!string.IsNullOrEmpty(response))
                 {
                     WriteFile(settings, modId, response);
@@ -40,20 +40,20 @@ public static class ModioApiProvider
         if (newModsCount != 0)
         {
             LogBase.Info($"Adding {newModsCount} new mods to Subscription.json");
-            WriteSubscription(settings);
+            Write(settings);
         }
     }
 
-    public static async Task AddAsync(SettingsModel settings, int modId)
+    public static async Task Add(SettingsModel settings, int modId)
     {
-        string response = await RequestAsync(settings, modId);
+        string response = await Get(settings, modId);
         if (!string.IsNullOrEmpty(response))
         {
             WriteFile(settings, modId, response);
         }
     }
 
-    private static async Task<string> RequestAsync(SettingsModel settings, int modId)
+    private static async Task<string> Get(SettingsModel settings, int modId)
     {
         string url = $"{settings.ApiUrlBase}/v1/games/{settings.GameId}/mods/{modId}?api_key={settings.ApiKey}";
         return await ApiFetchHelper.Get(url);
@@ -75,7 +75,7 @@ public static class ModioApiProvider
             || string.IsNullOrEmpty(settings.ApiKey);
     }
 
-    public static void WriteSubscription(SettingsModel settings)
+    public static void Write(SettingsModel settings)
     {
         string sandstormDataPath = Path.Combine(SettingsProvider.SandstormDataPath, settings.GameId.ToString());
         List<string> dataFiles = FsProvider.GetFiles(Path.Combine(sandstormDataPath, "Mods"), "*.json");
